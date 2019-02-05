@@ -1,0 +1,9 @@
+{
+    "require": {
+        "minter/minter-php-bip-44": "@dev",
+        "bitwasp/bitcoin": "v0.0.35.1",
+        "kornrunner/keccak": "^1.0",
+        "phpmailer/phpmailer": "^6.0",
+        "peekmo/jsonpath": "dev-master"
+    }
+}
