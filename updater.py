@@ -4,15 +4,9 @@ import subprocess as subp
 from os import chdir, listdir
 from os.path import join, isfile, realpath, dirname
 import getpass
-import sys
 import MySQLdb
 import MySQLdb.cursors
 import re
-import importlib.util
-
-
-USERNAME = getpass.getuser()
-BASE_PATH = dirname(realpath(__file__))
 
 
 def run(cmd):
@@ -25,23 +19,8 @@ def run2var(cmd):
     return out
 
 
-def is_ver(s, sep='\.'):
-    pattern = 'v\d{2}.\d{2}.\d{2}.\d{2}'.replace('.', sep)
-    return re.match(pattern, s)
-
-
-def get_new_ver_files(loc, sep='\.'):
-    output = {}
-    for f in listdir(loc):
-        fullpath = join(loc, f)
-        shortname = is_ver(f, sep=sep)
-        if isfile(fullpath) and shortname:
-            output[shortname[0].replace(sep, '.')] = (fullpath)
-    return output
-
-
-def get_db_config():
-    settings = join(BASE_PATH, 'settings.php')
+def get_db_config(base_path, filename='settings.php'):
+    settings = join(base_path, filename)
     with open(settings) as f:
         settings = f.read()
     return {
@@ -52,80 +31,60 @@ def get_db_config():
     }
 
 
+def get_db(base_path):
+    db_conf = get_db_config(base_path)
+    return MySQLdb.connect(
+        host=db_conf['host'],
+        user=db_conf['user'],
+        passwd=db_conf['pass'],
+        db=db_conf['name'],
+        cursorclass=MySQLdb.cursors.DictCursor,
+    )
+
+
+USERNAME = getpass.getuser()
+BASE_PATH = dirname(realpath(__file__))
+
 chdir(BASE_PATH)
 
-db_conf = get_db_config()
-
-# Connect
-db = MySQLdb.connect(
-    host=db_conf['host'],
-    user=db_conf['user'],
-    passwd=db_conf['pass'],
-    db=db_conf['name'],
-    cursorclass=MySQLdb.cursors.DictCursor,
-)
+db = get_db(BASE_PATH)
 
 cursor = db.cursor()
-
-# Execute SQL select statement
 cursor.execute("SELECT * FROM configuration")
 config = cursor.fetchone()
-curr_ver = config['current_version']
+currM = int(config['current_migration'])
 
-run(['git', 'fetch'])
-tags = run2var(['git', 'tag']).split('\n')
-tags = list(filter(lambda x: is_ver(x), tags))
-tags = list(filter(lambda x: x > curr_ver, tags))
-latest_ver = tags[-1]
+run(['git', 'pull'])
+run(['git', 'checkout', 'master'])
 
-git_status = run2var(['git', 'status']).split('\n')[0]
-is_at_head = latest_ver in git_status
+dbp = join(BASE_PATH, 'db')
+files = sorted([f for f in listdir(dbp) if re.match(r'\d\d\d\d_.*\.sql', f)])
+print('Current migration', f'{currM:04}')
+did_migrate = False
 
-if is_at_head:
-    sys.exit()
-
-git_status = run2var(['git', 'status']).split('\n')[0]
-git_status = git_status.split()[-1]
-
-UPDS = join(BASE_PATH, 'updates')
-updates = get_new_ver_files(UPDS, sep='_')
-
-MIGS = join(BASE_PATH, 'db')
-migrations = get_new_ver_files(MIGS, sep='_')
-
-
-for tag in tags:
-    print('Upgrading to', tag, 'from', curr_ver)
-    run(['git', 'checkout', tag])
-    update = updates.get(tag)
-    mod = None
-    if update:
-        spec = importlib.util.spec_from_file_location('*', update)
-        mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-    if mod:
-        mod.pre_script(BASE_PATH)
-    migration = migrations.get(tag)
-    if migration:
-        conn = MySQLdb.connect(
-            host="localhost",
-            user="wallet_user",
-            passwd="wallet_password",
-            db="wallet",
-            cursorclass=MySQLdb.cursors.DictCursor,
-        )
+for f in files:
+    if int(f[:4]) > currM:
+        did_migrate = True
+        print('Applying migration', f)
+        conn = get_db(BASE_PATH)
+        fullf = join(dbp, f)
         try:
             cur = conn.cursor()
-            with open(migration, 'r') as f:
-                query = f.read()
+            with open(fullf, 'r') as mf:
+                query = mf.read()
             cur.execute(query)
             cur.close()
             conn.commit()
         except Exception as e:
-            print('Error upgrading to', tag)
+            print('Error upgrading to', f)
             print(e)
             conn.rollback()
-    if mod:
-        mod.post_script(BASE_PATH)
-    query = 'UPDATE configuration SET current_version = "{}"'
-    cursor.execute(query.format(tag))
+        currM = int(f[:4])
+
+if not did_migrate:
+    print('No new migrations found')
+else:
+    cursor.execute(
+        f"UPDATE configuration SET current_migration = '{currM:04}';")
+cursor.close()
+db.commit()
