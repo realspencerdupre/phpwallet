@@ -20,7 +20,7 @@ if ($_POST['token'] == $_SESSION['token']) {
 
 $hdFactory = new HierarchicalKeyFactory();
 
-$query = $mysqli->query("SELECT * FROM invoices WHERE user = '".$_SESSION['user_session']."'and confirmed = 0;");
+$query = $mysqli->query("SELECT * FROM invoices WHERE user = '${_SESSION['user_session']}'and confirmed = 0;");
 $existing = $query->fetch_assoc();
 if ($existing) {
     header("Location: invoice.php?id=".$existing['id']);
@@ -33,7 +33,7 @@ $xpub = $hdFactory->fromExtended($config['public']);
 
 $COINMAX = $config['coinmax'];
 if (floatval($_POST["amount"]) > $COINMAX) {
-    addMessage(''.$_POST['amount']." $short is more than the maximum buy of ".$COINMAX, 'warning');
+    addMessage("{$_POST['amount']} $short is more than the maximum buy of $COINMAX", 'warning');
     header("Location: buy-ico.php");
     die();
 }

@@ -41,10 +41,10 @@ class Invoice {
         }
         $id = $this->mysqli->insert_id;
         $this->id = $id;
-        $key = $this->xpub->derivePath("44/0/".$id."/0/0");
+        $key = $this->xpub->derivePath("44/0/$id/0/0");
         $addr = (new PayToPubKeyHashAddress($key->getPublicKey()->getPubKeyHash()))->getAddress();
         $query = $this->mysqli->query(
-            'UPDATE invoices SET pay_addr = "'.$addr.'" WHERE id = '.$id.';'
+            "UPDATE invoices SET pay_addr = '$addr' WHERE id = $id;"
         );
         if ($query)
         {

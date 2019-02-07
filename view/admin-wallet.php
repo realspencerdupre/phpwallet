@@ -141,7 +141,7 @@ else
 						</div>
 						<?php 
 	while ($row = $invoices->fetch_assoc()) {
-		$apiurl = "https://api.blockcypher.com/v1/btc/test3/addrs/".$row['pay_addr']."/full?limit=50&confirmations=$required_confirmations";
+		$apiurl = "https://api.blockcypher.com/v1/btc/test3/addrs/{$row['pay_addr']}/full?limit=50&confirmations=$required_confirmations";
 		$json = json_decode(file_get_contents($apiurl));
 ?>
 							<!-- BTC -->
