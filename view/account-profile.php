@@ -4,7 +4,7 @@ include ('../common.php');
 $mysqli = new Mysqli($db_host, $db_user, $db_pass, $db_name);
 include ("../setup_view.php");
 
-$query = $mysqli->query("SELECT * FROM users WHERE username = '".$_SESSION['user_session']."';");
+$query = $mysqli->query("SELECT * FROM users WHERE username = '${_SESSION['user_session']}';");
 $user = $query->fetch_assoc();
 ?>
 <!DOCTYPE html>
