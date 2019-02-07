@@ -68,8 +68,8 @@ $currencies = $mysqli->query('SELECT * FROM currencies;');
 while ($currency = $currencies->fetch_assoc()) {
     $code = $currency['short'];
     $rate = floatval($_POST["currency-rate-$code"]);
-    $balance_url = $_POST["currency-balanceurl-$code"];
-    $balance_jsonpath = $_POST["currency-balancejsonpath-$code"];
+    $balance_url = $mysqli->real_escape_string($_POST["currency-balanceurl-$code"]);
+    $balance_jsonpath = $mysqli->real_escape_string($_POST["currency-balancejsonpath-$code"]);
     $required_conf = intval($_POST["currency-requiredconf-$code"]);
     $id = $currency['id'];
     if ($rate != $currency['rate']){
@@ -77,11 +77,11 @@ while ($currency = $currencies->fetch_assoc()) {
         addMessage("Updated {$currency['fullname']} rate to $rate", 'success');
     }
     if ($balance_url != $currency['balance_url']){
-        $mysqli->query("UPDATE currencies SET balance_url = $balance_url where id = $id;");
+        $mysqli->query("UPDATE currencies SET balance_url = '$balance_url' where id = $id;");
         addMessage("Updated {$currency['fullname']} balance url to $balance_url", 'success');
     }
     if ($balance_jsonpath != $currency['balance_jsonpath']){
-        $mysqli->query("UPDATE currencies SET balance_jsonpath = $balance_jsonpath where id = $id;");
+        $result = $mysqli->query("UPDATE currencies SET balance_jsonpath = '$balance_jsonpath' where id = $id;");
         addMessage("Updated {$currency['fullname']} balance json path to $balance_jsonpath", 'success');
     }
     if ($required_conf != $currency['required_conf']){
