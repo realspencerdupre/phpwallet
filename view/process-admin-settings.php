@@ -74,19 +74,19 @@ while ($currency = $currencies->fetch_assoc()) {
     $id = $currency['id'];
     if ($rate != $currency['rate']){
         $mysqli->query("UPDATE currencies SET rate = $rate where id = $id;");
-        addMessage("Updated ".$currency['fullname']." rate to $rate", 'success');
+        addMessage("Updated {$currency['fullname']} rate to $rate", 'success');
     }
     if ($balance_url != $currency['balance_url']){
         $mysqli->query("UPDATE currencies SET balance_url = $balance_url where id = $id;");
-        addMessage("Updated ".$currency['fullname']." balance url to $balance_url", 'success');
+        addMessage("Updated {$currency['fullname']} balance url to $balance_url", 'success');
     }
     if ($balance_jsonpath != $currency['balance_jsonpath']){
         $mysqli->query("UPDATE currencies SET balance_jsonpath = $balance_jsonpath where id = $id;");
-        addMessage("Updated ".$currency['fullname']." balance json path to $balance_jsonpath", 'success');
+        addMessage("Updated {$currency['fullname']} balance json path to $balance_jsonpath", 'success');
     }
     if ($required_conf != $currency['required_conf']){
         $mysqli->query("UPDATE currencies SET required_conf = $required_conf where id = $id;");
-        addMessage("Updated ".$currency['fullname']." required conf to $required_conf", 'success');
+        addMessage("Updated {$currency['fullname']} required conf to $required_conf", 'success');
     }
 
 }

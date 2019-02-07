@@ -55,7 +55,6 @@ config = cursor.fetchone()
 currM = int(config['current_migration'])
 
 run(['git', 'pull'])
-run(['git', 'checkout', 'master'])
 
 dbp = join(BASE_PATH, 'db')
 files = sorted([f for f in listdir(dbp) if re.match(r'\d\d\d\d_.*\.sql', f)])

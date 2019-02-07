@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `configuration` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT IGNORE INTO `configuration` (`id`, `current_migration`, `current_version`) VALUES (1, "v.00.00.00.00", "v.00.00.00.00");
+INSERT IGNORE INTO `configuration` (`id`, `current_migration`, `current_version`) VALUES (1, "0000", "0000");
 --
 -- Dumping data for table `users`
 --

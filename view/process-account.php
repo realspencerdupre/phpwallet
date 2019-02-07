@@ -8,7 +8,7 @@ include_once("../email.php");
 $query = $mysqli->query("SELECT * FROM configuration WHERE id = 1;");
 $config = $query->fetch_assoc();
 
-$query = $mysqli->query("SELECT * FROM users WHERE username = '".$_SESSION['user_session']."';");
+$query = $mysqli->query("SELECT * FROM users WHERE username = '{$_SESSION['user_session']}';");
 $user = $query->fetch_assoc();
 $userid = $user['id'];
 

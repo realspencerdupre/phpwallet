@@ -7,7 +7,7 @@ include ("../setup_view.php");
 $query = $mysqli->query("SELECT * FROM configuration WHERE id = 1;");
 $config = $query->fetch_assoc();
 
-$query = $mysqli->query("SELECT * FROM invoices WHERE user = '".$_SESSION['user_session']."'and confirmed = 0;");
+$query = $mysqli->query("SELECT * FROM invoices WHERE user = '${_SESSION['user_session']}'and confirmed = 0;");
 $existing = $query->fetch_assoc();
 
 $COINMAX = $config['coinmax'];
@@ -91,7 +91,7 @@ $COINMAX = $config['coinmax'];
                                 <button type="button" class="btn-gradient-primary mt-2" data-toggle="modal" data-target="#purchase<?=$currency['short']?>ModalLabel">Buy <i class="la la-angle-right"></i></button>
                             <?php } else {?>
                                 <br>
-                                <br> <a href="/view/invoice.php?uuid=<?php echo $existing['uuid'];?>">Pending Invoice</a>
+                                <br> <a href="/view/invoice.php?uuid=<?=$existing['uuid']?>">Pending Invoice</a>
                             <?php }?>
                         </div>
                     </div>
@@ -109,7 +109,7 @@ $COINMAX = $config['coinmax'];
                             </div>
                             <div class="modal-body">
                                 <form class="form form-horizontal mt-2 mx-2" method="POST" action="process-buy.php">
-                                    <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+                                    <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
                                     <input type="hidden" name="currency" value="<?=$currency['fullname']?>">
                                     <div class="form-body">
                                     <div class="row">
