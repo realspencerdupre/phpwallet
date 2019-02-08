@@ -13,9 +13,6 @@ use Peekmo\JsonPath\JsonStore;
 
 $client = new Client($rpc_host, $rpc_port, $rpc_user, $rpc_pass);
 
-$jsonurl = "https://api.blockcypher.com/v1/btc/test3/addrs/msAnoTvAYhVjdpvXGDHHSKPAXjtHCB5jx8/full?limit=50&confirmations=1";
-$json = file_get_contents($jsonurl);
-
 
 function scanInvoices() {
     global $mysqli;
@@ -39,28 +36,29 @@ function scanInvoices() {
         $bal = $store->get($currency['balance_jsonpath'])[0];
         $required = $row['pay_amt'];
         print " balance = $bal\n";
-        // if ($json == null) {
-        //     die("API source down\n");
-        // }
-        // if ($row['confirmed'] == 0 and $bal >= $required) {
-        //     $query = 'UPDATE invoices SET confirmed = 1 WHERE id = '.$id.';';
-        //     $result = $mysqli->query($query);
-        //     $rate = $row['tok_amt'] / $row['pay_amt'];
-        //     $receive = $bal / 100000000 * $rate;
-        //     $client->credit($row['user'], $receive);
-            
-        //     print "credited \n";
-        // }
-        // else if ($row['confirmed'] == 1 and $bal == 0) {
-        //     $query = 'UPDATE invoices SET swept = 1 WHERE id = '.$id.';';
-        //     $result = $mysqli->query($query);
-        //     print "swept \n";
-        // }
-        // else if ($row['confirmed']) {
-        //     print "confirmed, unswept\n";
-        // } else {
-        //     print "unconfirmed \n";
-        // }
+        if ($json == null) {
+            die("API source down\n");
+        }
+        if ($row['confirmed'] == 0 and $bal >= $required) {
+            $rate = $row['tok_amt'] / $row['pay_amt'];
+            $receive = $bal * $rate;
+            $query = "UPDATE invoices SET confirmed = 1, final_tok_amt = $receive, final_pay_amt = $bal WHERE id = $id;";
+            $result = $mysqli->query($query);
+            if (!$result)
+                die("MySQL query failed\n${var_dump($mysqli)}");
+            $client->credit($row['user'], $receive / 100000000);
+            print "credited \n";
+        }
+        else if ($row['confirmed'] == 1 and $bal == 0) {
+            $query = "UPDATE invoices SET swept = 1 WHERE id = $id;";
+            $result = $mysqli->query($query);
+            print "swept \n";
+        }
+        else if ($row['confirmed']) {
+            print "confirmed, unswept\n";
+        } else {
+            print "unconfirmed \n";
+        }
     }
 }
 

@@ -1,0 +1,1 @@
+ALTER TABLE invoices ADD final_tok_amt bigint(20);
