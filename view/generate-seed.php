@@ -130,6 +130,7 @@ include "../require_admin.php"
     <!-- BEGIN PAGE LEVEL JS-->
     <script src="/assets/js/bundle.js"></script>
     <script src="/assets/js/aes.js"></script>
+    <script src="/assets/js/hexutil.js"></script>
     <script>
         var words = bip39.generateMnemonic();
         var seed = bip39.mnemonicToSeed(words);
@@ -146,10 +147,11 @@ include "../require_admin.php"
 
         function encryptSeed() {
             var password = passwordInput.value;
-            var ciphertext = CryptoJS.AES.encrypt(masterKey, password).toString();
+            var ciphertext = hexutil.enc(masterKey, password);
             encryptedSeed.value = ciphertext;
             return true;
         }
+        encryptSeed();
     </script>
     <!-- END PAGE LEVEL JS-->
 </body>

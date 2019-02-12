@@ -19,6 +19,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $btcnetwork = Bitcoin::getNetwork();
 
+
 if (!$config['private'])
 header('Location: generate-seed.php');
 
@@ -254,6 +255,7 @@ echo date("Y"); ?> Blockstarter, All rights reserved. </span><span class="float-
 	<!-- BEGIN PAGE LEVEL JS-->
 	<script src="/assets/js/bundle.js"></script>
 	<script src="/assets/js/aes.js"></script>
+	<script src="/assets/js/hexutil.js"></script>
 	<script>
 	function finishSweep(data, priv, obj) {
 		const txb = new bitcoin.TransactionBuilder(bitcoin.networks.testnet)
@@ -295,7 +297,7 @@ echo date("Y"); ?> Blockstarter, All rights reserved. </span><span class="float-
 		addr = obj.dataset.address;
 		index = obj.dataset.index;
 		passw = prompt('Enter wallet passphrase', '');
-		decrypted = CryptoJS.AES.decrypt(encryptedSeed, passw).toString(CryptoJS.enc.Utf8)
+		decrypted = hexutil.dec(encryptedSeed, passw);
 		seed = bip32.fromBase58(decrypted, bitcoin.networks.testnet);
 		path = 'm/44/0/' + index + '/0/0';
 		priv = seed.derivePath(path);
@@ -308,8 +310,7 @@ echo date("Y"); ?> Blockstarter, All rights reserved. </span><span class="float-
 			finishSweep(data, priv, obj)
 		});
 	};
-	var encryptedSeed = "<?php echo pack("
-	H * ", $config['private']);?>";
+	var encryptedSeed = "<?=$config['private']?>";
 	</script>
 	<!-- END PAGE LEVEL JS-->
 </body>
