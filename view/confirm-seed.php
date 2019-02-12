@@ -9,9 +9,9 @@ if (empty($_POST)) {
     header("Location: verify-seed.php");
 }
 
-$encryptedSeed = implode(unpack("H*", $_POST['encryptedSeed']));;
+$encryptedSeed = $mysqli->real_escape_string($_POST['encryptedSeed']);
 $masterPubKey = $_POST['masterPubKey'];
-$mysqli->query("UPDATE configuration SET private=\"$encryptedSeed\", public=\"$masterPubKey\" WHERE id = 1;");
+$mysqli->query("UPDATE configuration SET private='$encryptedSeed', public='$masterPubKey' WHERE id = 1;");
 
 header("Location: admin-wallet.php");
 
