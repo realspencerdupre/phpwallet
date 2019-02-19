@@ -36,31 +36,32 @@ function scanInvoices() {
         time_nanosleep(0, intdiv(1000000000, 3));
 
         $store = new JsonStore($json);
-        $bal = $store->get($currency['balance_jsonpath'])[0];
+        $bal = $store->get($currency['balance_jsonpath'])[0] * 100000000;
         $required = $row['pay_amt'];
-        print " balance = $bal\n";
-        // if ($json == null) {
-        //     die("API source down\n");
-        // }
-        // if ($row['confirmed'] == 0 and $bal >= $required) {
-        //     $query = 'UPDATE invoices SET confirmed = 1 WHERE id = '.$id.';';
-        //     $result = $mysqli->query($query);
-        //     $rate = $row['tok_amt'] / $row['pay_amt'];
-        //     $receive = $bal / 100000000 * $rate;
-        //     $client->credit($row['user'], $receive);
-            
-        //     print "credited \n";
-        // }
-        // else if ($row['confirmed'] == 1 and $bal == 0) {
-        //     $query = 'UPDATE invoices SET swept = 1 WHERE id = '.$id.';';
-        //     $result = $mysqli->query($query);
-        //     print "swept \n";
-        // }
-        // else if ($row['confirmed']) {
-        //     print "confirmed, unswept\n";
-        // } else {
-        //     print "unconfirmed \n";
-        // }
+        print " balance = $bal satoshis ";
+        if ($json == null) {
+            die("API source down\n");
+        }
+        if ($row['confirmed'] == 0 and $bal >= $required) {
+            print "confirming...";
+            $query = "UPDATE invoices SET confirmed = 1 WHERE id = $id;";
+            $result = $mysqli->query($query);
+            $rate = $row['tok_amt'] / $row['pay_amt'];
+            $receive = $bal / 100000000 * $rate;
+            $client->credit($row['user'], $receive);
+            print "credited \n";
+        }
+        else if ($row['confirmed'] == 1 and $bal == 0) {
+            print "sweeping...";
+            $query = 'UPDATE invoices SET swept = 1 WHERE id = '.$id.';';
+            $result = $mysqli->query($query);
+            print "swept \n";
+        }
+        else if ($row['confirmed']) {
+            print "confirmed, unswept\n";
+        } else {
+            print "unconfirmed \n";
+        }
     }
 }
 
