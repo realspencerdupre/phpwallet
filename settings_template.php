@@ -12,8 +12,8 @@ $rpc_port = "{rpcport}";
 $rpc_user = "{rpcuser}";
 $rpc_pass = "{rpcpass}";
 
-$fullname = "Megacoin"; //Website Title (Do Not include 'wallet')
-$short = "MGC"; //Coin Short (BTC)
+$fullname = "{fullname}"; //Coin Name (Bitcoin)
+$short = "{shortname}"; //Coin Short (BTC)
 $blockchain_tx_url = "http://blockchain.info/tx/"; //Blockchain Url
 $support = "support@yourwebsite.com"; //Your support eMail
 $hide_ids = array(1); //Hide account from admin dashboard
