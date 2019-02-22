@@ -6,3 +6,4 @@ vendor
 composer.lock
 assets/images/logo/logo.png
 bin
+*.log
