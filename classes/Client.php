@@ -8,13 +8,13 @@ class Client {
 
 	function __construct($host, $port, $user, $pass)
 	{
-		$this->uri = "http://" . $user . ":" . $pass . "@" . $host . ":" . $port . "/";
+		$this->uri = "http://$user:$pass@$host:$port/";
 		$this->jsonrpc = new jsonRPCClient($this->uri);
 	}
 
 	function getBalance($user_session)
 	{
-		return $this->jsonrpc->getbalance("zelles(" . $user_session . ")", 6);
+		return $this->jsonrpc->getbalance("zelles($user_session)", 6);
 		//return 21;
 	}
 
@@ -26,34 +26,34 @@ class Client {
 
 	function getAddress($user_session)
 	{
-                return $this->jsonrpc->getaccountaddress("zelles(" . $user_session . ")");
+        return $this->jsonrpc->getaccountaddress("zelles($user_session)");
 	}
 
 	function getAddressList($user_session)
 	{
-		return $this->jsonrpc->getaddressesbyaccount("zelles(" . $user_session . ")");
+		return $this->jsonrpc->getaddressesbyaccount("zelles($user_session)");
 		//return array("1test", "1test");
 	}
 
 	function getTransactionList($user_session, $page = 1)
 	{
-		return $this->jsonrpc->listtransactions("zelles(" . $user_session . ")", 5, ($page - 1) * 5);
+		return $this->jsonrpc->listtransactions("zelles($user_session)", 5, ($page - 1) * 5);
 	}
 
 	function getNewAddress($user_session)
 	{
-		return $this->jsonrpc->getnewaddress("zelles(" . $user_session . ")");
+		return $this->jsonrpc->getnewaddress("zelles($user_session)");
 		//return "1test";
 	}
 
 	function withdraw($user_session, $address, $amount)
 	{
-		return $this->jsonrpc->sendfrom("zelles(" . $user_session . ")", $address, (float)$amount, 6);
+		return $this->jsonrpc->sendfrom("zelles($user_session)", $address, (float)$amount, 6);
 		//return "ok wow";
 	}
 	function credit($user_session, $amount)
 	{
-		return $this->jsonrpc->move("piWallet", "zelles($user_session)", $amount);
+		return $this->jsonrpc->move("zelles(piWallet)", "zelles($user_session)", $amount);
 		//return "ok wow";
 	}
 }
