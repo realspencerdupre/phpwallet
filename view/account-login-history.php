@@ -18,8 +18,7 @@ include ("../setup_view.php");
         <?=$fullname?>
     </title>
     <link rel="apple-touch-icon" href="/assets/images/ico/apple-icon-120.png">
-    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/ico/favicon.ico">
-    <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i|Comfortaa:300,400,500,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i|Comfortaa:300,400,500,700" rel="stylesheet">
     <!-- BEGIN VENDOR CSS-->
     <link rel="stylesheet" type="text/css" href="/assets/css/vendors.css">
     <!-- END VENDOR CSS-->
@@ -34,7 +33,26 @@ include ("../setup_view.php");
     <!-- BEGIN Custom CSS-->
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
     <!-- END Custom CSS-->
-</head>
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/assets/images/logo/logo.png" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="128x128" />
+    <meta name="application-name" content="<?=$fullname?> Wallet"/>
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileImage" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square70x70logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square150x150logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-wide310x150logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square310x310logo" content="/assets/images/logo/logo.png" /></head>
 
 <body class="vertical-layout vertical-compact-menu 2-columns   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-compact-menu" data-col="2-columns">
     <?php include_once('nav.php'); ?>
