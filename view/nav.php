@@ -5,7 +5,7 @@
                 <ul class="nav navbar-nav flex-row">
                     <li class="nav-item mobile-menu d-md-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
                     <li class="nav-item d-md-none">
-                        <a class="navbar-brand" href="index.php"><img class="brand-logo d-none d-md-block" alt="crypto ico admin logo" src="/assets/images/logo/logo.png"><img class="brand-logo d-sm-block d-md-none" alt="crypto ico admin logo sm" src="/assets/images/logo/logo-sm.png"></a>
+                        <a class="navbar-brand" href="index.php"><img class="brand-logo d-none d-md-block" alt="crypto ico admin logo" src="/assets/images/logo/logo.png"><img class="brand-logo d-sm-block d-md-none" alt="crypto ico admin logo sm" src="/assets/images/logo/logo.png"></a>
                     </li>
                     <li class="nav-item d-md-none"><a class="nav-link open-navbar-container" data-toggle="collapse" data-target="#navbar-mobile"><i class="la la-ellipsis-v">   </i></a></li>
                 </ul>
