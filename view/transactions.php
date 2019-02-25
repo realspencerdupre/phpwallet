@@ -5,6 +5,8 @@ $mysqli = new Mysqli($db_host, $db_user, $db_pass, $db_name);
 include ("../setup_view.php");
 
 $transactionList = $client->getTransactionList($user_session, $txpage);
+
+date_default_timezone_set('EST');
 ?>
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
@@ -117,7 +119,7 @@ $transactionList = $client->getTransactionList($user_session, $txpage);
 			<div class="row">
 				<div class="col-md-2 col-12 py-1">
 					<p class="mb-0"><span class="d-inline-block d-md-none text-bold-700">Date: </span>
-						<?php echo date('n/j/Y h:i a',$transaction['time']) ?>
+						<?php echo date('n/j/Y h:i a', $transaction['time']) ?>
 					</p>
 				</div>
 				<div class="col-md-2 col-12 py-1"> <span class="d-inline-block d-md-none text-bold-700">Type: </span> <span class="d-inline-block d-md-none text-bold-700">Type: </span>
