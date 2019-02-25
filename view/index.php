@@ -81,7 +81,7 @@ $addressList = $client->getAddressList($user_session);
                                         <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
                                         <div class="col-md-2 col-12">
                                             <fieldset class="form-label-group mb-0">
-                                                <input type="number" step="0.00000001" class="form-control" id="ico-token" name="amount" required="" autofocus="">
+                                                <input type="text" class="form-control" id="ico-token" name="amount" required="" autofocus="" onkeyup="onlyNumbers(this);">
                                                 <label for="ico-token">
                                                     <?php echo $lang['WALLET_AMOUNT']; ?>
                                                 </label>
@@ -194,6 +194,7 @@ $addressList = $client->getAddressList($user_session);
     <!-- END MODERN JS-->
     <!-- BEGIN PAGE LEVEL JS-->
     <script src="/assets/js/scripts/pages/dashboard-ico.js" type="text/javascript"></script>
+    <script src="/assets/js/util.js"></script>
     <!-- END PAGE LEVEL JS-->
 </body>
 

@@ -154,7 +154,7 @@ $COINMAX = $config['coinmax'];
                                                 </label>
                                                 <fieldset class="col-10">
                                                     <div class="input-group">
-                                                        <input name="amount" type="text" class="form-control" value="0" aria-describedby="basic-addon4" id="buyLocal<?=$currency['short']?>" onkeyup="populate(this);" data-target="buy<?=$currency['short']?>">
+                                                        <input name="amount" type="text" class="form-control" value="0" aria-describedby="basic-addon4" id="buyLocal<?=$currency['short']?>" onkeyup="onlyNumbers(this);populate(this);" data-target="buy<?=$currency['short']?>">
                                                         <div class="input-group-append"> <span class="input-group-text" id="basic-addon4"><i class="icon-layers"></i></span> </div>
                                                     </div>
                                                 </fieldset>
@@ -204,7 +204,7 @@ $COINMAX = $config['coinmax'];
                                         <div class="form-group row">
                                             <fieldset class="col-12">
                                                 <div class="input-group">
-                                                    <input id="calcBTC" type="text" class="form-control" placeholder="BTC" aria-describedby="basic-addon4" onkeyup="populate(this, fromLocal=false)" data-target="calcLocal" data-currency="BTC">
+                                                    <input id="calcBTC" type="text" class="form-control" placeholder="BTC" aria-describedby="basic-addon4" onkeyup="onlyNumbers(this);populate(this, fromLocal=false);" data-target="calcLocal" data-currency="BTC">
                                                     <div class="input-group-append"> <span class="input-group-text" id="basic-addon4"><i class="cc BTC-alt"></i></span> </div>
                                                 </div>
                                             </fieldset>
@@ -217,7 +217,7 @@ $COINMAX = $config['coinmax'];
                                         <div class="form-group row">
                                             <fieldset class="col-12">
                                                 <div class="input-group">
-                                                    <input id="calcLocal" type="text" class="form-control" placeholder="<?=$short?>" aria-describedby="basic-addon4" onkeyup="populate(this)" data-target="calcBTC">
+                                                    <input id="calcLocal" type="text" class="form-control" placeholder="<?=$short?>" aria-describedby="basic-addon4" onkeyup="onlyNumbers(this);populate(this);" data-target="calcBTC">
                                                     <div class="input-group-append"> <span class="input-group-text" id="basic-addon4"><?=$short?></span> </div>
                                                 </div>
                                             </fieldset>
@@ -248,6 +248,7 @@ $COINMAX = $config['coinmax'];
 <script src="/assets/js/core/app.js" type="text/javascript"></script>
 <!-- END MODERN JS-->
 <!-- BEGIN PAGE LEVEL JS-->
+<script src="/assets/js/util.js"></script>
 <script>
     currJSON = <?php echo json_encode($currencies);?>;
     currencies = {};
