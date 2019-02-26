@@ -3,6 +3,9 @@ define("IN_WALLET", true);
 include ('../common.php');
 $mysqli = new Mysqli($db_host, $db_user, $db_pass, $db_name);
 include ("../setup_view.php");
+
+$page = $_GET['page'] ? $_GET['page'] : 1;
+$offset = (intval($page) - 1) * 5;
 ?>
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
@@ -98,7 +101,7 @@ include ("../setup_view.php");
                             <div class="history-table-tbody">
                                 <?php 
     $username = $_SESSION['user_session'];
-    $logins = $mysqli->query("SELECT * FROM logins WHERE user = '$username' ORDER BY -id;");
+    $logins = $mysqli->query("SELECT * FROM logins WHERE user = '$username' ORDER BY -id LIMIT 5 OFFSET $offset;");
     while ($login = $logins->fetch_assoc()) {
         
         $datetime = $login['datetime'];
@@ -144,21 +147,33 @@ include ("../setup_view.php");
                                         </div>
                                     </section>
                                     <?php }?>
-                                        <nav aria-label="Page navigation">
-                                            <ul class="pagination justify-content-center pagination-separate pagination-flat">
-                                                <li class="page-item">
-                                                    <a class="page-link" href="#" aria-label="Previous"> <span aria-hidden="true">« Prev</span> <span class="sr-only">Previous</span> </a>
-                                                </li>
-                                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                                                <li class="page-item">
-                                                    <a class="page-link" href="#" aria-label="Next"> <span aria-hidden="true">Next »</span> <span class="sr-only">Next</span> </a>
-                                                </li>
-                                            </ul>
-                                        </nav>
+
+                                    <nav aria-label="Page navigation">
+<ul class="pagination justify-content-center pagination-separate pagination-flat">
+	<?php if ($page > 3) { ?>
+		<li class="page-item">
+			<a class="page-link" href="account-login-history.php" aria-label="Previous"> <span aria-hidden="true">First</span> <span class="sr-only">First</span> </a>
+		</li>
+	<?php } ?>
+	<li class="page-item">
+		<a class="page-link" href="account-login-history.php?page=<?=$page > 1 ? $page - 1 : 1?>" aria-label="Previous"> <span aria-hidden="true">« Prev</span> <span class="sr-only">Previous</span> </a>
+	</li>
+	<?php
+		if ($page > 3) {
+			$pagerange = range($page - 2, $page + 2);
+		} else {
+			$pagerange = range(1, 5);
+		}
+		foreach ($pagerange as $p) {
+	?>
+		<li class="page-item <?php if ($p == $page) echo 'active';?>"><a class="page-link" href="account-login-history.php?page=<?=$p?>"><?=$p?></a></li>
+	<?php } ?>
+	<li class="page-item">
+		<a class="page-link" href="account-login-history.php?page=<?= $page+1 ?>" aria-label="Next"> <span aria-hidden="true">Next »</span> <span class="sr-only">Next</span> </a>
+	</li>
+</ul>
+						</nav>
+
                             </div>
                         </div>
                     </div>
