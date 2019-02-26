@@ -7,6 +7,7 @@ include_once("../email.php");
 $username = $mysqli->real_escape_string(strip_tags($_POST["username"]));
 $email = $mysqli->real_escape_string(strip_tags($_POST["email"]));
 $password = $mysqli->real_escape_string(strip_tags($_POST["password"]));
+$terms = $mysqli->real_escape_string(strip_tags($_POST["terms"]));
 
 
 if ($_POST['token'] == $_SESSION['token']) {
@@ -18,6 +19,11 @@ if ($_POST['token'] == $_SESSION['token']) {
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     addMessage("Invalid email - $email", 'warning');
+    header('Location: account-register.php'); die();
+}
+
+if (!$terms) {
+    addMessage("You must agree to the Terms to register", 'warning');
     header('Location: account-register.php'); die();
 }
 
