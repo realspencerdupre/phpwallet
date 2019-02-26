@@ -173,10 +173,10 @@ else
 														<div class="media-body">
 															<h5 class="mt-0 text-capitalize"><?php echo $row['user'];?></h5>
 															<p class="text-muted mb-0 font-small-3 wallet-address">
-																<?php
-								echo substr($row['pay_addr'], 0, 20), '...';
-								echo "<p><a href=\"$apiurl\">api data</a></p>";
-							?> </p>
+																<?=$row['pay_addr']?>
+															
+															<p><a href="<?=$apiurl?>">api data</a></p>
+															</p>
 														</div>
 													</div>
 												</div>
