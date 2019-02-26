@@ -100,15 +100,18 @@ date_default_timezone_set('EST');
 					</div>
 					<div class="transactions-table-tbody">
 						<?php
-							foreach(array_reverse($transactionList) as $transaction) { 
-								if($transaction['category']=="send") {
+							foreach(array_reverse($transactionList) as $tx) {
+								$amount = floatval($tx['amount']);
+								if($amount < 0) {
 									$tx_type = ['Sent', 'danger'];
 								} else {
 									$tx_type = ['Received', 'success'];
 								}
-								if($transaction['confirmations'] > 5) {
+								if($tx['confirmations'] > 5) {
 									$tx_status = 'Confirmed';
-								} else {
+								} elseif($tx['category']=='move') {
+									$tx_status = 'Confirmed';
+							        } else {
 									$tx_status = 'Pending';
 								}
 						?>
@@ -119,7 +122,7 @@ date_default_timezone_set('EST');
 			<div class="row">
 				<div class="col-md-2 col-12 py-1">
 					<p class="mb-0"><span class="d-inline-block d-md-none text-bold-700">Date: </span>
-						<?php echo date('n/j/Y h:i a', $transaction['time']) ?>
+						<?php echo date('n/j/Y h:i a', $tx['time']) ?>
 					</p>
 				</div>
 				<div class="col-md-2 col-12 py-1"> <span class="d-inline-block d-md-none text-bold-700">Type: </span> <span class="d-inline-block d-md-none text-bold-700">Type: </span>
@@ -129,7 +132,7 @@ date_default_timezone_set('EST');
 				</div>
 				<div class="col-md-2 col-12 py-1">
 					<p class="mb-0"><span class="d-inline-block d-md-none text-bold-700">Amount: </span>
-						<?=abs($transaction['amount']); ?>
+						<?=abs($tx['amount']); ?>
 							<?=$short?>
 					</p>
 				</div>
@@ -140,11 +143,16 @@ date_default_timezone_set('EST');
 				</div>
 				<div class="col-md-2 col-12 py-1">
 					<p class="mb-0"><span class="d-inline-block d-md-none text-bold-700">Details: </span>
-						<?php if ($transaction['txid']) {?>
-							<a href="https://blockstarter.net/exp/<?=$fullname?>/tx/<?php echo $transaction['txid'];?>/">Details</a>
+						<?php if ($tx['txid']) {?>
+							<a href="https://blockstarter.net/exp/<?=$fullname?>/tx/<?php echo $tx['txid'];?>/">Details</a>
+                        <?php } elseif($amount < 0 and $tx['category'] == 'move') { 
+                            $len = strlen($tx['otheraccount']);
+                            $purchaser = substr($tx['otheraccount'], 7, $len-8);
+                        ?>
+							<strong>Purchased by: <?=$purchaser?></strong>
 						<?php } else { ?>
 							<strong>Purchased off-chain</strong>
-						<?php } ?>
+					  	<?php } ?>
 					</p>
 				</div>
 			</div>
