@@ -13,10 +13,7 @@
             <div class="navbar-container">
                 <div class="collapse navbar-collapse" id="navbar-mobile">
                     <ul class="nav navbar-nav mr-auto float-left">
-                        <li class="nav-item d-none d-md-block"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu">         </i></a></li>
-                        <li class="nav-item nav-search"><a class="nav-link nav-link-search" href="#"><i class="ficon ft-search"></i></a>
-                            <div class="search-input">
-                                <input class="input" type="text" placeholder="Explore <?=$fullname?>..."> </div>
+                        <li class="nav-item d-none d-md-block"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu">         </i></a>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav float-right">
@@ -25,7 +22,7 @@
                         </li>
                         <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="transactions.php"><i class="ficon icon-wallet"></i></a></li>
                         <li class="dropdown dropdown-user nav-item">
-                            <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"> <span class="avatar avatar-online"><img src="/assets/images/portrait/small/avatar-s-1.png" alt="avatar"></span><span class="mr-1"><?=$short?><span class="user-name text-bold-700"><?php echo satoshitize($balance); ?></span></span>
+                            <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown"> <span class="mr-1"><?=$short?> <span class="user-name text-bold-700"><?php echo satoshitize($balance); ?></span></span>
                             </a>
                             <?php include("right-dropdown.php") ?>
                         </li>

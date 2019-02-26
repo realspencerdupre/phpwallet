@@ -87,7 +87,7 @@ $user = $query->fetch_assoc();
                 <div class="card-body">
                 <div class="col-12">
                 <div class="row">
-                    <div class="col-md-2 col-12"> <img src="/assets/images/portrait/medium/avatar-m-1.png" class="rounded-circle height-100" alt="Card image" /> </div>
+                    <div class="col-md-2 col-12">  </div>
                     <div class="col-md-10 col-12">
                         <div class="row">
                             <?php
