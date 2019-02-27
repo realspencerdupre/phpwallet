@@ -1,6 +1,7 @@
 <?php
 define("IN_WALLET", true);
 include ('../common.php');
+$mysqli = new Mysqli($db_host, $db_user, $db_pass, $db_name);
 
 if (!empty($_SESSION['user_session'])) {
     header("Location: index.php");
@@ -8,6 +9,34 @@ if (!empty($_SESSION['user_session'])) {
 
 $messages = parseMessages($_SESSION['messages']);
 $_SESSION['messages'] = '';
+
+if ($_GET['code']) {
+    $code = $_GET['code'];
+} elseif ($_POST['code']) {
+    $code = $_POST['code'];
+}
+$code = $mysqli->real_escape_string($code);
+
+$q = "SELECT * FROM confirmations WHERE code = '$code' and confirmed IS NULL;";
+$confirm = $mysqli->query($q)->fetch_assoc();
+
+if ($_POST) {
+    $pass = $mysqli->real_escape_string($_POST['password']);
+    $conf = $mysqli->real_escape_string($_POST['passwordconf']);
+    if ($pass != $conf) {
+        addMessage("Passwords must match", 'warning');
+    }
+    if (!$pass) {
+        addMessage("Must provide new password", 'warning');
+    }
+    if (!$code) {
+        addMessage("Reset request invalid", 'warning');
+    }
+    $password = password_hash($pass, PASSWORD_BCRYPT);
+    $mysqli->query("UPDATE users SET password = '$password' where username = '{$confirm['user']}';");
+    addMessage("Password updated successfully", 'success');
+    header("Location: account-login.php"); die();
+}
 ?>
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
@@ -79,24 +108,19 @@ $_SESSION['messages'] = '';
                 <div class="card-content">                    
                     <div class="card-body login-p-3">
                         <p class="text-center h5 text-capitalize">Welcome to <?=$fullname?>!</p>
-                        <p class="mb-3 text-center">Please enter your login details</p>
-                        <form class="form-horizontal form-signin" action="index.php" method="POST">
-                            <input type="hidden" name="action" value="login" />
-                            <input type="hidden" name="next" value="<?php echo $_GET['next'];?>" />
-                            <fieldset class="form-label-group">
-                                <input type="text" class="form-control" id="user-name" placeholder="<?php echo $lang['FORM_USER']; ?>" required="" autofocus="true" name="username">
-                                <label for="user-name">Username</label>
-                            </fieldset>
+                        <p class="mb-3 text-center">Enter your new password</p>
+                        <form class="form-horizontal form-signin" action="reset-password.php" method="POST">
+                            <input type='hidden' name="code" value="<?=$_GET['code']?>">
                             <fieldset class="form-label-group">
                                 <input type="password" class="form-control" id="user-password" placeholder="<?php echo $lang['FORM_PASS']; ?>" required="" name="password">
                                 <label for="user-password">Password</label>
                             </fieldset>
-                            <hr>
-                            <fieldset>
-                                <input type="text" class="form-control" name="auth" id="auth" placeholder="<?php echo $lang['FORM_2FA']; ?>">
+                            <fieldset class="form-label-group">
+                                <input type="password" class="form-control" id="user-password-conf" placeholder="Confirm password" required="" name="passwordconf">
+                                <label for="user-password-conf">Confirm Password</label>
                             </fieldset>
-                            <button type="submit" class="btn-gradient-primary btn-block my-1"><?php echo $lang['FORM_LOGIN']; ?></button>
-                            <p class="text-center"><a href="account-register.php" class="card-link">Register</a><a href="forgot-password.php" class="card-link">Forgot Password</a></p>
+                            <hr>
+                            <button type="submit" class="btn-gradient-primary btn-block my-1">Reset Password</button>
                         </form>
                     </div>                    
                 </div>

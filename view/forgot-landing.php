@@ -79,25 +79,8 @@ $_SESSION['messages'] = '';
                 <div class="card-content">                    
                     <div class="card-body login-p-3">
                         <p class="text-center h5 text-capitalize">Welcome to <?=$fullname?>!</p>
-                        <p class="mb-3 text-center">Please enter your login details</p>
-                        <form class="form-horizontal form-signin" action="index.php" method="POST">
-                            <input type="hidden" name="action" value="login" />
-                            <input type="hidden" name="next" value="<?php echo $_GET['next'];?>" />
-                            <fieldset class="form-label-group">
-                                <input type="text" class="form-control" id="user-name" placeholder="<?php echo $lang['FORM_USER']; ?>" required="" autofocus="true" name="username">
-                                <label for="user-name">Username</label>
-                            </fieldset>
-                            <fieldset class="form-label-group">
-                                <input type="password" class="form-control" id="user-password" placeholder="<?php echo $lang['FORM_PASS']; ?>" required="" name="password">
-                                <label for="user-password">Password</label>
-                            </fieldset>
-                            <hr>
-                            <fieldset>
-                                <input type="text" class="form-control" name="auth" id="auth" placeholder="<?php echo $lang['FORM_2FA']; ?>">
-                            </fieldset>
-                            <button type="submit" class="btn-gradient-primary btn-block my-1"><?php echo $lang['FORM_LOGIN']; ?></button>
-                            <p class="text-center"><a href="account-register.php" class="card-link">Register</a><a href="forgot-password.php" class="card-link">Forgot Password</a></p>
-                        </form>
+                        <br><br><br><br>
+                        <p class="mb-3 text-center"><strong>Password reset email sent</strong></p>
                     </div>                    
                 </div>
             </div>

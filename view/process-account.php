@@ -48,7 +48,7 @@ if ($email and $email != $user['email']) {
 if (($oldpass or $newpass or $conpass) and !($oldpass and $newpass and $conpass)) {
     addMessage("Must provide old, new, and confirmed password", 'warning');
     header('Location: account-profile.php'); die();
-} else {
+} elseif ($oldpass or $newpass or $conpass) {
     if ($conpass != $newpass) {
         addMessage("Passwords don't match", 'warning');
         header('Location: account-profile.php'); die();
