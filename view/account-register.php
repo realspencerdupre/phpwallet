@@ -94,7 +94,7 @@ $_SESSION['messages'] = '';
                                 <label for="email">Email address</label>
                             </fieldset>
                             <fieldset class="form-label-group">
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Your Password" required="">
+                                <input type="password" class="form-control" id="user-password" name="password" placeholder="Your Password" required="">
                                 <label for="user-password">Password</label>
                             </fieldset>
                             <div class="form-group row">
