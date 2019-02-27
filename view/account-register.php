@@ -73,7 +73,7 @@ $_SESSION['messages'] = '';
         <!-- image -->
         <div class="col-xl-3 col-lg-4 col-md-5 col-sm-5 col-12 p-0 text-center d-none d-md-block">
             <div class="border-grey border-lighten-3 m-0 box-shadow-0 card-account-left height-500">
-                <img src="/assets/images/pages/account-login.png" class="card-account-img width-200" alt="card-account-img">
+                <img src="/assets/images/logo/logo.png" class="card-account-img width-200" alt="card-account-img">
             </div>
         </div>
         <!-- login form -->
