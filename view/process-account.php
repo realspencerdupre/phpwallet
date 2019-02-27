@@ -26,12 +26,12 @@ if ($_POST['token'] == $_SESSION['token']) {
     header('Location: account-profile.php'); die();
 }
 
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    addMessage("Invalid email - $email", 'warning');
-    header('Location: account-profile.php'); die();
-}
 
-if ($email != $user['email']) {
+if ($email and $email != $user['email']) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        addMessage("Invalid email - $email", 'warning');
+        header('Location: account-profile.php'); die();
+    }
     $mysqli->query("UPDATE users SET email = '$email' where id = $userid;");
     addMessage("Updated email to $email", 'success');
     $subject = "$short - Confirmation Email";
@@ -48,6 +48,16 @@ if ($email != $user['email']) {
 if (($oldpass or $newpass or $conpass) and !($oldpass and $newpass and $conpass)) {
     addMessage("Must provide old, new, and confirmed password", 'warning');
     header('Location: account-profile.php'); die();
+} else {
+    if ($conpass != $newpass) {
+        addMessage("Passwords don't match", 'warning');
+        header('Location: account-profile.php'); die();
+    }
+    $password = password_hash($newpass, PASSWORD_BCRYPT);
+    $mysqli->query("UPDATE users SET password = '$password' where id = $userid;");
+    session_destroy();
+    addMessage("Password updated successfully", 'success');
+    header("Location: account-login.php"); die();
 }
 
 

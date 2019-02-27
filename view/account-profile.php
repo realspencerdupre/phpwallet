@@ -136,7 +136,7 @@ $user = $query->fetch_assoc();
                                 </div>
                                 <div class="col-6">
                                     <fieldset class="form-label-group">
-                                        <input type="text" class="form-control" id="email" name="email" value="<?php echo $user['email'];?>" required="" autofocus="">
+                                        <input type="text" class="form-control" id="email" name="email" value="<?php echo $user['email'];?>" autofocus="">
                                         <label for="email">Email</label>
                                     </fieldset>
                                 </div>
@@ -160,7 +160,7 @@ $user = $query->fetch_assoc();
                                 </div>
                                 <div class="col-lg-6 col-md-12">
                                     <fieldset class="form-label-group">
-                                        <input type="confirmpassword" class="form-control" id="confirm-password" placeholder="Enter Password" autofocus="" name="conpassword">
+                                        <input type="password" class="form-control" id="confirm-password" placeholder="Enter Password" autofocus="" name="conpassword">
                                         <label for="confirm-password">Confirm password</label>
                                     </fieldset>
                                 </div>
