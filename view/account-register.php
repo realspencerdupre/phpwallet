@@ -81,7 +81,7 @@ $_SESSION['messages'] = '';
             <div class="card border-grey border-lighten-3 m-0 box-shadow-0 card-account-right height-500">                
                 <div class="card-content">                    
                     <div class="card-body login-p-3">
-                        <p class="text-center h5 text-capitalize">Started with <?=$fullname?>!</p>
+                        <p class="text-center h5 text-capitalize">Get started with <?=$fullname?>!</p>
                         <p class="mb-3 text-center">Create your account</p>
                         <form class="form-horizontal form-signin" action="process-register.php" method="POST">
                             <input type="hidden" name="token" value="<?=$_SESSION['token'];?>">
