@@ -29,10 +29,6 @@ $pay_currencies = [
         'fullname' => 'Bitcoin',
         'shortname' => 'BTC',
     ],
-    [
-        'fullname' => 'Ethereum',
-        'shortname' => 'ETH',
-    ],
 ]
 
 ?>
