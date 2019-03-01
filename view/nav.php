@@ -22,7 +22,7 @@
                         </li>
                         <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="transactions.php"><i class="ficon icon-wallet"></i></a></li>
                         <li class="dropdown dropdown-user nav-item">
-                            <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown"> <span class="mr-1"><?=$short?> <span class="user-name text-bold-700"><?php echo satoshitize($balance); ?></span></span>
+                            <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown"> <span class="mr-1"><?=$user_session?></span>
                             </a>
                             <?php include("right-dropdown.php") ?>
                         </li>
