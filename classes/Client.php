@@ -2,6 +2,8 @@
 <?php
 //To enable developer mode (no need for an RPC server, replace this file with the snipet at https://gist.github.com/d3e148deb5969c0e4b60 
 
+require_once "../settings.php";
+
 class Client {
 	private $uri;
 	public $jsonrpc;
@@ -15,13 +17,11 @@ class Client {
 	function getBalance($user_session)
 	{
 		return $this->jsonrpc->getbalance("zelles($user_session)", 6);
-		//return 21;
 	}
 
 	function getTotalBalance()
 	{
 		return $this->jsonrpc->getbalance("*", 6);
-		//return 21;
 	}
 
 	function getAddress($user_session)
@@ -32,7 +32,6 @@ class Client {
 	function getAddressList($user_session)
 	{
 		return $this->jsonrpc->getaddressesbyaccount("zelles($user_session)");
-		//return array("1test", "1test");
 	}
 
 	function getTransactionList($user_session, $page = 1)
@@ -43,18 +42,22 @@ class Client {
 	function getNewAddress($user_session)
 	{
 		return $this->jsonrpc->getnewaddress("zelles($user_session)");
-		//return "1test";
 	}
 
 	function withdraw($user_session, $address, $amount)
 	{
 		return $this->jsonrpc->sendfrom("zelles($user_session)", $address, (float)$amount, 6);
-		//return "ok wow";
+	}
+	function placehold($user_session, $amount) {
+		global $hot_account_main;
+		global $hot_account_wait;
+		echo "Placing hold for $amount for $user_session\n";
+		return $this->jsonrpc->move("zelles($hot_account_main)", "zelles($hot_account_wait)", $amount);
 	}
 	function credit($user_session, $amount)
 	{
-		return $this->jsonrpc->move("zelles(piWallet)", "zelles($user_session)", $amount);
-		//return "ok wow";
+		global $hot_account_wait;
+		return $this->jsonrpc->move("zelles($hot_account_wait)", "zelles($user_session)", $amount);
 	}
 }
 ?>

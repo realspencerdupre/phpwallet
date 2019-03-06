@@ -52,6 +52,7 @@ $currency = Currency::get($mysqli, $curr_name);
 $pay_amount = intval($amount * $currency->rate);
 $invoice = new Invoice($mysqli, $xpub);
 $success = $invoice->add($amount, $pay_amount, $user_session, "BTC");
+$client->placehold($user_session, floatval($_POST["amount"]));
 $uuid = $invoice->uuid;
 if ($success) {
     header("Location: invoice.php?uuid=$uuid");
