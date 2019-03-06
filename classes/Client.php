@@ -4,7 +4,7 @@
 
 class Client {
 	private $uri;
-	private $jsonrpc;
+	public $jsonrpc;
 
 	function __construct($host, $port, $user, $pass)
 	{
