@@ -9,12 +9,6 @@ $mysqli = new Mysqli($db_host, $db_user, $db_pass, $db_name);
 if ($client->getBalance($hot_account_main) == 0)
     $client->jsonrpc->move('', "zelles($hot_account_main)", 100);
 
-$accounts = $client->jsonrpc->listaccounts();
-foreach ($accounts as $acc => $bal) {
-    if ($acc)
-        my_assert($bal >= 0, '', "$acc balance ($bal) not >= 0");
-}
-
 // Test initial hot balances
 wait_msg("Move funds to main account, then press Enter...");
 $main_bal = floatval($client->getBalance($hot_account_main));
@@ -37,6 +31,12 @@ $client->credit($invoice['user'], $diff_bal);
 $user_bal = $client->getBalance($invoice['user']);
 my_assert($pre_user_bal != $user_bal, '', 'User balance unchanged by credit');
 my_assert($user_bal == $pre_user_bal + $diff_bal, '', "User balance is wrong amount: $user_bal");
+
+$accounts = $client->jsonrpc->listaccounts();
+foreach ($accounts as $acc => $bal) {
+    if ($acc)
+        my_assert($bal >= 0, '', "$acc balance ($bal) not >= 0");
+}
 
 echo "Test passes!\n";
 ?>
