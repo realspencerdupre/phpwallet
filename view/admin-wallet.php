@@ -227,7 +227,7 @@ else
 										<p>Balance:
 				<?php
 					$accTotal = 0;
-					$q = $mysqli->query('SELECT * FROM users WHERE username != "piWallet";');
+					$q = $mysqli->query("SELECT * FROM users WHERE username != '$hot_account_main';");
 					$i = $q->fetch_assoc();
 					while($i) {
 					$accTotal += $client->getBalance($i['username']);
@@ -244,7 +244,7 @@ else
 											<?php echo $total - $accTotal; ?>
 										</p>
 										<p>Admin address:
-											<?php echo $client->getAddress('piWallet');?>
+											<?php echo $client->getAddress($hot_account_main);?>
 										</p>
 									</div>
 								</div>

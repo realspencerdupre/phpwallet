@@ -31,7 +31,7 @@ $query = $mysqli->query("SELECT * FROM configuration WHERE id = 1;");
 $config = $query->fetch_assoc();
 $xpub = $hdFactory->fromExtended($config['public']);
 
-$COINMAX = min($config['coinmax'], $client->getBalance('piWallet'));
+$COINMAX = min($config['coinmax'], $client->getBalance($hot_account_main));
 if (floatval($_POST["amount"]) > $COINMAX) {
     addMessage("{$_POST['amount']} $short is more than the maximum buy of $COINMAX", 'warning');
     header("Location: buy-ico.php");
