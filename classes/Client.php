@@ -46,7 +46,13 @@ class Client {
 
 	function withdraw($user_session, $address, $amount)
 	{
-		return $this->jsonrpc->sendfrom("zelles($user_session)", $address, (float)$amount, 6);
+		$pre_balance = $this->getBalance($user_session);
+		$expected = $pre_balance - $amount;
+		$txid = $this->jsonrpc->sendfrom("zelles($user_session)", $address, (float)$amount, 6);
+		$actual = $this->getBalance($user_session);
+		$fee = $expected - $actual;
+		$this->credit($user_session, $fee);
+		return $txid;
 	}
 	function placehold($user_session, $amount) {
 		global $hot_account_main;
