@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `configuration` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-INSERT IGNORE INTO `configuration` (`id`, `current_migration`, `current_version`) VALUES (1, "0000", "0000");
+INSERT IGNORE INTO `configuration` (`id`, `current_migration`, `current_version`, `coinmax`) VALUES (1, "0000", "0000", 9999);
 --
 -- Dumping data for table `users`
 --
@@ -85,6 +85,8 @@ INSERT IGNORE INTO `configuration` (`id`, `current_migration`, `current_version`
 INSERT IGNORE INTO `users` (`id`, `date`, `ip`, `username`, `password`, `admin`, `locked`) VALUES
 (1, '', 'localhost', 'piWallet', '$2y$10$9KalPpQkWkVu7VOSRT.SqOBkCXxFQMCq17mNYUpg92EMF7TvAozPG', '1', NULL);
 
+INSERT IGNORE INTO `users` (`id`, `date`, `ip`, `username`, `password`, `admin`, `locked`) VALUES
+(1, '', 'localhost', 'piWallet_wait', '$2y$10$9KalPpQkWkVu7VOSRT.SqOBkCXxFQMCq17mNYUpg92EMF7TvAozPG', '1', NULL);
 
 CREATE TABLE IF NOT EXISTS `logins` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
