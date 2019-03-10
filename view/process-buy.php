@@ -9,6 +9,11 @@ use BitWasp\Bitcoin\Network\NetworkFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+$query = $mysqli->query("SELECT * FROM configuration;");
+$config = $query->fetch_assoc();
+$hdFactory = new HierarchicalKeyFactory();
+$xpub = $hdFactory->fromExtended($config['public']);
+$invoice = new Invoice($mysqli, $xpub);
 
 if ($_POST['token'] == $_SESSION['token']) {
     $_SESSION['token'] = sha1('@s%a$l£t#'.rand(0, 32000));
@@ -18,18 +23,12 @@ if ($_POST['token'] == $_SESSION['token']) {
     header('Location: buy-ico.php'); die();
 }
 
-$hdFactory = new HierarchicalKeyFactory();
-
 $query = $mysqli->query("SELECT * FROM invoices WHERE user = '${_SESSION['user_session']}'and confirmed = 0;");
 $existing = $query->fetch_assoc();
 if ($existing) {
     header("Location: invoice.php?id=".$existing['id']);
     die('pre-existing invoice');
 }
-
-$query = $mysqli->query("SELECT * FROM configuration WHERE id = 1;");
-$config = $query->fetch_assoc();
-$xpub = $hdFactory->fromExtended($config['public']);
 
 $COINMAX = min($config['coinmax'], $client->getBalance($hot_account_main));
 if (floatval($_POST["amount"]) > $COINMAX) {
@@ -50,12 +49,17 @@ $curr_name = $mysqli->real_escape_string($_POST['currency']);
 $currency = Currency::get($mysqli, $curr_name);
 
 $pay_amount = intval($amount * $currency->rate);
-$invoice = new Invoice($mysqli, $xpub);
 $success = $invoice->add($amount, $pay_amount, $user_session, "BTC");
+if (!$success) {
+    addMessage("Purchase order conflicted with another purchase, please try again", 'warning');
+    header("Location: buy-ico.php");
+    die();
+}
+
 $client->placehold($user_session, floatval($_POST["amount"]));
 $uuid = $invoice->uuid;
 if ($success) {
-    header("Location: invoice.php?uuid=$uuid");
+    header("Location: invoice.php?uuid=$uuid"); die();
 }
 
 

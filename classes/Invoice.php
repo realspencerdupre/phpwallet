@@ -22,10 +22,13 @@ class Invoice {
 
 	private $mysqli;
 
-	function __construct($mysqli, $xpub) {
+	function __construct($mysqli, $xpub, $id=null) {
         $this->mysqli = $mysqli;
         $this->xpub = $xpub;
-        $this->id = NULL;
+        if (is_null($id)) {
+            $result=$mysqli->query("SHOW TABLE STATUS LIKE 'invoices'");
+            $this->id = $result->fetch_assoc()['Auto_increment'];
+        };
         $date = date("U");
         $this->uuid = sha1("$date".rand(0, 32000));
 	}
@@ -34,17 +37,18 @@ class Invoice {
         $date = date("n/j/Y g:i a");
         $uuid = $this->uuid;
         $query = $this->mysqli->query(
-            "INSERT INTO invoices (`date`, `uuid`, `pay_curr`, `pay_amt`, `tok_amt`, `user`, `pay_addr`) VALUES ('$date', '$uuid', '$currency', '$pay_amount', '$tok_amount', '$user', 'abcdefgh');"
+            "INSERT INTO invoices (`id`, `date`, `uuid`, `pay_curr`, `pay_amt`, `tok_amt`, `user`, `pay_addr`) VALUES ('$this->id', '$date', '$uuid', '$currency', '$pay_amount', '$tok_amount', '$user', 'abcdefgh');"
         );
         if (!$query) {
-            return mysqli_error($this->$mysqli);
+            return $query;
+        };
+        if (is_null($this->id)) {
+            $this->id = $this->mysqli->insert_id;
         }
-        $id = $this->mysqli->insert_id;
-        $this->id = $id;
-        $key = $this->xpub->derivePath("44/0/$id/0/0");
+        $key = $this->xpub->derivePath("44/0/$this->id/0/0");
         $addr = (new PayToPubKeyHashAddress($key->getPublicKey()->getPubKeyHash()))->getAddress();
         $query = $this->mysqli->query(
-            "UPDATE invoices SET pay_addr = '$addr' WHERE id = $id;"
+            "UPDATE invoices SET pay_addr = '$addr' WHERE id = $this->id;"
         );
         if ($query)
         {
