@@ -146,23 +146,16 @@ $currencies = $mysqli->query('SELECT * from currencies;');
 						<div class="card-body row">
 							<div class="col-md-3 col-12">
 								<fieldset class="form-label-group mb-0">
-									<input class="form-control" name="currency-balanceurl-<?=$currency['short']?>" autofocus="" value="<?=$currency['balance_url']?>">
-									<label><?=$currency['fullname']?> balance API endpoint</label>
+								Balance API:
+								<select name="<?=$currency['short']?>-balance-api" class="form-control" id="bal_api">
+									<?php foreach (Currency::$api_options as $optid=>$option) { ?>
+									<option value="<?=$optid?>" <?php if ($currency['balance_api'] == $optid) echo 'selected';?>><?=$option['name']?></option>
+									<?php } ?>
+								</select>
 								</fieldset>
 							</div>
 							<div class="col-md-9 col-12 mb-1">
-								Current value: <?=htmlspecialchars($currency['balance_url'])?>
-							</div>
-						</div>
-						<div class="card-body row">
-							<div class="col-md-3 col-12">
-								<fieldset class="form-label-group mb-0">
-									<input class="form-control" name="currency-balancejsonpath-<?=$currency['short']?>" autofocus="" value="<?=$currency['balance_jsonpath']?>">
-									<label><?=$currency['fullname']?> balance API jsonpath</label>
-								</fieldset>
-							</div>
-							<div class="col-md-9 col-12 mb-1">
-								Current value: <?=htmlspecialchars($currency['balance_jsonpath'])?>
+								Current value: <?=htmlspecialchars(Currency::$api_options[$currency['balance_api']]['name'])?>
 							</div>
 						</div>
 						<div class="card-body row">
