@@ -150,7 +150,7 @@ date_default_timezone_set('EST');
                             $len = strlen($tx['otheraccount']);
                             $purchaser = substr($tx['otheraccount'], 7, $len-8);
                         ?>
-							<strong>Purchased by: <?=$purchaser?></strong>
+							<strong>Purchased by user</strong>
 						<?php } else { ?>
 							<strong>Purchased off-chain</strong>
 					  	<?php } ?>
