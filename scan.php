@@ -45,9 +45,7 @@ function scanInvoices() {
             print "confirming...";
             $query = "UPDATE invoices SET confirmed = 1 WHERE id = $id;";
             $result = $mysqli->query($query);
-            $rate = $row['tok_amt'] / $row['pay_amt'];
-            $receive = $bal / 100000000 * $rate;
-            $client->credit($row['user'], $receive);
+            $client->credit($row['user'], $row['tok_amt']);
             print "credited \n";
         }
         else if ($row['confirmed'] == 1 and $bal == 0) {

@@ -171,6 +171,9 @@ $COINMAX = $config['coinmax'];
                                     </div>
                                     </div>
                                 </form>
+                                <div class="alert alert-danger">
+                                <p>Warning: If you send more BTC than the sale price, it will currently not be refunded.</p>
+                                </div>
                                 <p class="font-italic mx-1 mb-2">The calculator uses the effective <?=$short?> price, which is based on the price <?=$currency['rate']?> <?=$short?> = 1.0 <?=$currency['short']?>.</p>
                                 <h6 class="mx-1">4 step guide</h6>
                                 <ol>
