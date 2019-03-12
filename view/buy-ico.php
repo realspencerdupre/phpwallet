@@ -104,7 +104,7 @@ $COINMAX = $config['coinmax'];
                         <div class="col-md-5 col-xl-6 col-12">
                             <p><strong><?=$short?>  Deposited After 1 Confirmation</strong></p>
                             <h1>Buy with <?=$currency['fullname']?></h1> </div>
-                        <div class="col-md-4 col-xl-4 col-12 d-none d-md-block text-right">
+                        <div class="col-md-4 col-xl-4 col-12 d-md-block text-right">
                             <?php if (!$existing) {?>
                                 <button type="button" class="btn-gradient-primary mt-2" data-toggle="modal" data-target="#purchase<?=$currency['short']?>ModalLabel">Buy <i class="la la-angle-right"></i></button>
                             <?php } else {?>
@@ -126,51 +126,51 @@ $COINMAX = $config['coinmax'];
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
                             </div>
                             <div class="modal-body">
-                                <form class="form form-horizontal mt-2 mx-2" method="POST" action="process-buy.php">
-                                    <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-                                    <input type="hidden" name="currency" value="<?=$currency['fullname']?>">
-                                    <div class="form-body">
-                                    <div class="row">
-                                        <div class="col-12 col-md-5">
-                                            <div class="form-group row">
-                                                <label class="col-2 label-control" for="projectinput1"><?=$currency['short']?></label>
-                                                <fieldset class="col-10">
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control" value="0" aria-describedby="basic-addon4" disabled id="buy<?=$currency['short']?>" data-currency="<?=$currency['short']?>">
-                                                        <div class="input-group-append"> <span class="input-group-text" id="basic-addon4"><i class="cc <?=$currency['short']?>-alt"></i></span></div>
-                                                    </div>
-                                                </fieldset>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-2">
-                                            <fieldset class="col-12">
-                                                <p class="mb-0 text-center font-medium-5">=</p>
-                                            </fieldset>
-                                        </div>
-                                        <div class="col-12 col-md-5">
-                                            <div class="form-group row">
-                                                <label class="col-2 label-control" for="projectinput2">
-                                                    <?=$short?>
-                                                </label>
-                                                <fieldset class="col-10">
-                                                    <div class="input-group">
-                                                        <input name="amount" type="text" class="form-control" value="0" aria-describedby="basic-addon4" id="buyLocal<?=$currency['short']?>" onkeyup="onlyNumbers(this);populate(this);" data-target="buy<?=$currency['short']?>">
-                                                        <div class="input-group-append"> <span class="input-group-text" id="basic-addon4"><i class="icon-layers"></i></span> </div>
-                                                    </div>
-                                                </fieldset>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 col-md-9"></div>
-                                        <div class="col-12 col-md-3">
-                                            <div class="form-group row">
-                                                <button type="submit" class="btn-gradient-primary mt-2">Buy <i class="la la-angle-right"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </form>
+<form class="form form-horizontal mt-2 mx-2" method="POST" action="process-buy.php">
+    <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+    <input type="hidden" name="currency" value="<?=$currency['fullname']?>">
+    <div class="form-body">
+        <div class="row">
+            <div class="col-12 col-md-5">
+                <div class="form-group row">
+                    <label class="col-2 label-control" for="projectinput1"><?=$currency['short']?></label>
+                    <fieldset class="col-10">
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="0" aria-describedby="basic-addon4" disabled id="buy<?=$currency['short']?>" data-currency="<?=$currency['short']?>">
+                            <div class="input-group-append"> <span class="input-group-text" id="basic-addon4"><i class="cc <?=$currency['short']?>-alt"></i></span></div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="col-12 col-md-2">
+                <fieldset class="col-12">
+                    <p class="mb-0 text-center font-medium-5">=</p>
+                </fieldset>
+            </div>
+            <div class="col-12 col-md-5">
+                <div class="form-group row">
+                    <label class="col-2 label-control" for="projectinput2">
+                        <?=$short?>
+                    </label>
+                    <fieldset class="col-10">
+                        <div class="input-group">
+                            <input name="amount" type="text" class="form-control" value="0" aria-describedby="basic-addon4" id="buyLocal<?=$currency['short']?>" onkeyup="onlyNumbers(this);populate(this);" data-target="buy<?=$currency['short']?>">
+                            <div class="input-group-append"> <span class="input-group-text" id="basic-addon4"><i class="icon-layers"></i></span> </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-9"></div>
+            <div class="col-12 col-md-3">
+                <div class="form-group row">
+                    <button type="submit" class="btn-gradient-primary mt-2">Buy <i class="la la-angle-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
                                 <div class="alert alert-danger">
                                 <p>Please ensure you send enough <?=$currency['fullname']?> to fulfill your invoice and any transaction fees or you will not receive the purchased <?=$fullname?>. Over payments will be forfeited. We cannot offer refunds at this time.</p>
                                 </div>
