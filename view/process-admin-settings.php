@@ -15,8 +15,8 @@ if ($_POST['token'] == $_SESSION['token']) {
     header('Location: admin-settings.php'); die();
 }
 
-$coinmax = floatval($_POST["coinmax"]);
-if ($coinmax != $config['coinmax']) {
+$coinmax = $mysqli->real_escape_string($_POST["coinmax"]);
+if (bccomp($coinmax, $config['coinmax']) != 0) {
     $mysqli->query("UPDATE configuration SET coinmax = $coinmax;");
     addMessage("Updated maximum buy to $coinmax", 'success');
 }
@@ -67,11 +67,11 @@ if ($host != $config['host']) {
 $currencies = $mysqli->query('SELECT * FROM currencies;');
 while ($currency = $currencies->fetch_assoc()) {
     $code = $currency['short'];
-    $rate = floatval($_POST["currency-rate-$code"]);
+    $rate = $mysqli->real_escape_string($_POST["currency-rate-$code"]);
     $balance_api = $mysqli->real_escape_string($_POST["$code-balance-api"]);
     $required_conf = intval($_POST["currency-requiredconf-$code"]);
     $id = $currency['id'];
-    if ($rate != $currency['rate']){
+    if (bccomp($rate, $currency['rate']) != 0){
         $mysqli->query("UPDATE currencies SET rate = $rate where id = $id;");
         addMessage("Updated {$currency['fullname']} rate to $rate", 'success');
     }

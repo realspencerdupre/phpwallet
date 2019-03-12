@@ -31,15 +31,15 @@ if ($existing) {
 }
 
 $COINMAX = min($config['coinmax'], $client->getBalance($hot_account_main));
-if (floatval($_POST["amount"]) > $COINMAX) {
+if (bccomp($_POST['amount'], $COINMAX) == 1) {
     addMessage("{$_POST['amount']} $short is more than the maximum buy of $COINMAX", 'warning');
     header("Location: buy-ico.php");
     die();
 }
 
-$amount = intval(floatval($_POST["amount"]) * 100000000);
+$amount = bcmul($_POST['amount'], 100000000);
 
-if ($amount == 0) {
+if (bccomp($amount, 0) == 0) {
     addMessage("Amount must be greater than 0", 'warning');
     header("Location: buy-ico.php");
     die();
@@ -48,7 +48,7 @@ if ($amount == 0) {
 $curr_name = $mysqli->real_escape_string($_POST['currency']);
 $currency = Currency::get($mysqli, $curr_name);
 
-$pay_amount = intval($amount * $currency->rate);
+$pay_amount = bcmul($amount, $currency->rate);
 $success = $invoice->add($amount, $pay_amount, $user_session, "BTC");
 if (!$success) {
     addMessage("Purchase order conflicted with another purchase, please try again", 'warning');
@@ -56,10 +56,13 @@ if (!$success) {
     die();
 }
 
-$client->placehold($user_session, floatval($_POST["amount"]));
+// JSON library requires float, seems OK for just typing a string
+$client->placehold($user_session, floatval(bcdiv($amount, 100000000, 8)));
 $uuid = $invoice->uuid;
 if ($success) {
     header("Location: invoice.php?uuid=$uuid"); die();
+} else {
+    echo var_dump($mysqli);
 }
 
 

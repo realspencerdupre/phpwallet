@@ -101,6 +101,7 @@ date_default_timezone_set('EST');
 					<div class="transactions-table-tbody">
 						<?php
 							foreach(array_reverse($transactionList) as $tx) {
+								// floatval ok for non-write ops
 								$amount = floatval($tx['amount']);
 								if($amount < 0) {
 									$tx_type = ['Sent', 'danger'];

@@ -23,7 +23,7 @@ $success1 = $inv1->add(999, 999, 'piWallet', "BTC");
 $success2 = $inv2->add(999, 999, 'piWallet', "BTC");
 
 my_assert($success1, '', 'Adding invoice 1 failed');
-my_assert($success2, '', "Adding invoice 2 failed");
+my_assert(!$success2, '', "Adding invoice 2 failed");
 
 $mysqli->query("DELETE FROM invoices WHERE id = $inv1->id;");
 echo "Test passed\n";

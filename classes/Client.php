@@ -57,8 +57,9 @@ class Client {
 	function placehold($user_session, $amount) {
 		global $hot_account_main;
 		global $hot_account_wait;
+		$result = $this->jsonrpc->move("zelles($hot_account_main)", "zelles($hot_account_wait)", $amount);
 		echo "Placing hold for $amount for $user_session\n";
-		return $this->jsonrpc->move("zelles($hot_account_main)", "zelles($hot_account_wait)", $amount);
+		return $result;
 	}
 	function credit($user_session, $amount)
 	{
