@@ -6,7 +6,6 @@ include ("../setup_view.php");
 
 $transactionList = $client->getTransactionList($user_session, $txpage);
 
-date_default_timezone_set('EST');
 ?>
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">

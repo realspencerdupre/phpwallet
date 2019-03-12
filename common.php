@@ -163,5 +163,6 @@ switch ($lang) {
 
 include_once 'languages/'.$lang_file;
 
+date_default_timezone_set('America/New_York');
 
 ?>
