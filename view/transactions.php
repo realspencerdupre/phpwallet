@@ -74,6 +74,9 @@ date_default_timezone_set('EST');
 						</div>
 					</div>
 				</div>
+				<div class=" col-md-4">
+					<li class="breadcrumb breadcrumb-item"><a href="https://blockstarter.net/exp/<?=$fullname?>/">Block Explorer</a> </li>
+				</div>
 			</div>
 			<div class="content-body">
 				<div id="transactions">
