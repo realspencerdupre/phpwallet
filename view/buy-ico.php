@@ -252,6 +252,7 @@ $COINMAX = $config['coinmax'];
 <!-- END MODERN JS-->
 <!-- BEGIN PAGE LEVEL JS-->
 <script src="/assets/js/util.js"></script>
+<script src='/assets/js/big.min.js'></script>
 <script>
     currJSON = <?php echo json_encode($currencies);?>;
     currencies = {};
@@ -269,7 +270,7 @@ $COINMAX = $config['coinmax'];
             rate = currencies[obj.dataset.currency].rate;
             result = val / rate
         }
-        target.value = result
+        target.value = Big(result).toFixed(8)
     }
 </script>
 <!-- END PAGE LEVEL JS-->

@@ -71,7 +71,7 @@ while ($currency = $currencies->fetch_assoc()) {
     $balance_api = $mysqli->real_escape_string($_POST["$code-balance-api"]);
     $required_conf = intval($_POST["currency-requiredconf-$code"]);
     $id = $currency['id'];
-    if (bccomp($rate, $currency['rate']) != 0){
+    if (bccomp(strval($rate), strval($currency['rate']), 8) != 0){
         $mysqli->query("UPDATE currencies SET rate = $rate where id = $id;");
         addMessage("Updated {$currency['fullname']} rate to $rate", 'success');
     }
