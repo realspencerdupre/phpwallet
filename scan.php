@@ -16,7 +16,7 @@ $client = new Client($rpc_host, $rpc_port, $rpc_user, $rpc_pass);
 
 function scanInvoices() {
     global $mysqli;
-    $query = 'SELECT * from invoices WHERE swept = 0;';
+    $query = 'SELECT * from invoices WHERE swept = 0 and cancelled = 0;';
     $invoices = $mysqli->query($query);
     while ($row = $invoices->fetch_assoc()) {
         global $required_confirmations;

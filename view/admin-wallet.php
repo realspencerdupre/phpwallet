@@ -55,9 +55,9 @@ function pubkeyToEtherAddress($pubkey) {
 
 $all = $_GET['all'];
 if ($all)
-	$invoices = $mysqli->query('SELECT * from invoices;');
+	$invoices = $mysqli->query('SELECT * from invoices where cancelled=0;');
 else
-	$invoices = $mysqli->query('SELECT * from invoices where swept = 0;');
+	$invoices = $mysqli->query('SELECT * from invoices where swept=0 and cancelled=0;');
 
 ?>
 <!DOCTYPE html>
@@ -131,6 +131,7 @@ else
 			</div>
 			<div class="content-detached content-left">
 				<div class="content-body col-md-12">
+					<?php printMessages($messages);?>
 					<div class="row">
 						<div class="col-md-8">
 							<h6 class="my-2">Invoices</h6>
@@ -167,48 +168,57 @@ else
 								<div class="card-content">
 									<div class="card-body">
 										<div class="col-12">
-											<div class="row">
-												<div class="col-md-4 col-12 py-1">
-													<div class="media">
-														<div class="media-body">
-															<h5 class="mt-0 text-capitalize"><?php echo $row['user'];?></h5>
-															<p class="text-muted mb-0 font-small-3 wallet-address">
-																<?=$row['pay_addr']?>
-															
-															<p><a href="<?=$apiurl?>">api data</a></p>
-															</p>
-														</div>
-													</div>
-												</div>
-												<div class="col-md-3 col-12 py-1 text-center">
-													<p>Pay <strong><?php echo satoshitize($row['pay_amt'] / 100000000) . ' ' . $row['pay_curr']; ?></strong></p>
-													<p>Get <strong><?php echo satoshitize($row['tok_amt'] / 100000000) . ' ' . $short; ?></strong></p>
-													<hr>
-													<?php if (!$row['swept']) {?>
-														<p>Balance <strong><?php echo satoshitize($json->balance / 100000000) . ' ' . $row['pay_curr']; ?></strong></p>
-														<p>Bal. (0 conf) <strong><?php echo satoshitize($json->unconfirmed_balance / 100000000) . ' ' . $row['pay_curr']; ?></strong></p>
-														<p class="text-muted mb-0 font-small-3">
-															<!-- Exchange converted value -->
-														</p>
-														<?php } else {?>
-															<p><strong>Swept</strong></p>
-															<?php } ?>
-												</div>
-												<div class="col-md-5 col-12 py-1 text-center">
-													<?php if (!$row['swept']) {?>
-														<input id="sweep_<?php echo $row['pay_addr']; ?>" placeholder="address...">
-														<button onclick="sweepAddress(this)" class="btn-primary btn line-height-3" data-address="<?php echo $row['pay_addr']; ?>" data-index="<?php echo $row['id']; ?>">Sweep</button>
-														<?php } ?>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-md-12 col-12 py-1">
-													<p id="hex_<?php echo $row['pay_addr']; ?>"></p>
-													<p>
-														<a id="txhref_<?php echo $row['pay_addr']; ?>" href="#"></a>
-													</p>
-												</div>
-											</div>
+<div class="row">
+	<div class="col-md-4 col-12 py-1">
+		<div class="media">
+			<div class="media-body">
+				<h5 class="mt-0 text-capitalize"><?php echo $row['user'];?></h5>
+				<p class="text-muted mb-0 font-small-3 wallet-address">
+					<?=$row['pay_addr']?>
+				
+				<p><a href="<?=$apiurl?>">api data</a></p>
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3 col-12 py-1 text-center">
+		<p>Pay <strong><?php echo satoshitize($row['pay_amt'] / 100000000) . ' ' . $row['pay_curr']; ?></strong></p>
+		<p>Get <strong><?php echo satoshitize($row['tok_amt'] / 100000000) . ' ' . $short; ?></strong></p>
+		<hr>
+		<?php if (!$row['swept']) {?>
+			<p>Balance <strong><?php echo satoshitize($json->balance / 100000000) . ' ' . $row['pay_curr']; ?></strong></p>
+			<p>Bal. (0 conf) <strong><?php echo satoshitize($json->unconfirmed_balance / 100000000) . ' ' . $row['pay_curr']; ?></strong></p>
+			<p class="text-muted mb-0 font-small-3">
+				<!-- Exchange converted value -->
+			</p>
+			<?php } else {?>
+				<p><strong>Swept</strong></p>
+				<?php } ?>
+	</div>
+	<div class="col-md-5 col-12 py-1 ">
+		<?php if (!$row['swept']) {?>
+			<input id="sweep_<?php echo $row['pay_addr']; ?>" placeholder="address...">
+			<button onclick="sweepAddress(this)" class="btn-primary btn line-height-3" data-address="<?php echo $row['pay_addr']; ?>" data-index="<?php echo $row['id']; ?>">Sweep</button>
+		<?php } ?>
+		<br><br><br>
+		<?php if (!$row['confirmed']) {?>
+			<form 	action="process-cancel-invoice.php" method="POST" onsubmit="return confirm('Are you sure you want to cancel this invoice?');">
+			<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+			<input type="hidden" name="id" value="<?=$row['id']?>">
+			<strong>Cancel invoice: </strong>
+			<button class="btn-danger btn line-height-1" data-address="" type="submit">Cancel</button>
+			</form>
+		<?php } ?>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12 col-12 py-1">
+		<p id="hex_<?php echo $row['pay_addr']; ?>"></p>
+		<p>
+			<a id="txhref_<?php echo $row['pay_addr']; ?>" href="#"></a>
+		</p>
+	</div>
+</div>
 										</div>
 									</div>
 								</div>

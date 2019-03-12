@@ -17,8 +17,6 @@ use kornrunner\Keccak;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$invoices = $mysqli->query('SELECT * from invoices;');
-
 ?>
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">

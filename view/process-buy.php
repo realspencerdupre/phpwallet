@@ -23,7 +23,7 @@ if ($_POST['token'] == $_SESSION['token']) {
     header('Location: buy-ico.php'); die();
 }
 
-$query = $mysqli->query("SELECT * FROM invoices WHERE user = '${_SESSION['user_session']}'and confirmed = 0;");
+$query = $mysqli->query("SELECT * FROM invoices WHERE user = '${_SESSION['user_session']}'and confirmed = 0 and cancelled = 0;");
 $existing = $query->fetch_assoc();
 if ($existing) {
     header("Location: invoice.php?id=".$existing['id']);

@@ -6,7 +6,7 @@ include ("../setup_view.php");
 
 $uuid = $mysqli->real_escape_string(strip_tags($_GET['uuid']));
 
-$query = $mysqli->query("SELECT * FROM invoices WHERE uuid = '$uuid';");
+$query = $mysqli->query("SELECT * FROM invoices WHERE uuid = '$uuid' and cancelled = 0;");
 $invoice = $query->fetch_assoc();
 
 ?>

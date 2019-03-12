@@ -19,8 +19,6 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $btcnetwork = Bitcoin::getNetwork();
 
-$invoices = $mysqli->query('SELECT * from invoices;');
-
 $currencies = $mysqli->query('SELECT * from currencies;');
 
 ?>

@@ -7,7 +7,7 @@ include ("../setup_view.php");
 $query = $mysqli->query("SELECT * FROM configuration WHERE id = 1;");
 $config = $query->fetch_assoc();
 
-$query = $mysqli->query("SELECT * FROM invoices WHERE user = '${_SESSION['user_session']}'and confirmed = 0;");
+$query = $mysqli->query("SELECT * FROM invoices WHERE user = '${_SESSION['user_session']}'and confirmed = 0 and cancelled = 0;");
 $existing = $query->fetch_assoc();
 
 $COINMAX = $config['coinmax'];
@@ -172,7 +172,7 @@ $COINMAX = $config['coinmax'];
                                     </div>
                                 </form>
                                 <div class="alert alert-danger">
-                                <p>Warning: If you send more BTC than the sale price, it will currently not be refunded.</p>
+                                <p>Warning: If you send more <?=$short?> than the sale price, it will not be refunded.</p>
                                 </div>
                                 <p class="font-italic mx-1 mb-2">The calculator uses the effective <?=$short?> price, which is based on the price <?=$currency['rate']?> <?=$short?> = 1.0 <?=$currency['short']?>.</p>
                                 <h6 class="mx-1">4 step guide</h6>
