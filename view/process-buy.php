@@ -32,7 +32,7 @@ if ($existing) {
 
 $COINMAX = min($config['coinmax'], $client->getBalance($hot_account_main));
 if (bccomp($_POST['amount'], $COINMAX) == 1) {
-    addMessage("{$_POST['amount']} $short is more than the maximum buy of $COINMAX", 'warning');
+    addMessage("{$_POST['amount']} $short exceeds the buy limit", 'warning');
     header("Location: buy-ico.php");
     die();
 }
