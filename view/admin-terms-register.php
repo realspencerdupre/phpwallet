@@ -16,7 +16,6 @@ use BitWasp\Bitcoin\Crypto\EcAdapter\Impl\PhpEcc\Key\PublicKey;
 use kornrunner\Keccak;
 
 require __DIR__ . '/../vendor/autoload.php';
-
 ?>
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
@@ -29,7 +28,7 @@ require __DIR__ . '/../vendor/autoload.php';
 ?> admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities with bitcoin dashboard.">
 	<meta name="keywords" content="admin template, crypto ico admin template, dashboard template, flat admin template, responsive admin template, web app, crypto dashboard, bitcoin dashboard">
 	<meta name="author" content="PIXINVENT">
-	<title>Admin Test Email -
+	<title>Admin Terms and Conditions -
 		<?php echo $fullname ?>
 	</title>
     <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i|Comfortaa:300,400,500,700" rel="stylesheet">
@@ -81,8 +80,8 @@ require __DIR__ . '/../vendor/autoload.php';
 							<ol class="breadcrumb">
 								<li class="breadcrumb-item"><a href="/view/admin-settings.php">Admin Settings</a></li>
 								<li class="breadcrumb-item"> <a href="/view/admin-wallet.php">Admin Wallet</a> </li>
-                                <li class="breadcrumb-item active">Admin Test Email</li>
-								<li class="breadcrumb-item"> <a href="/view/admin-terms-register.php">Terms of Service</a></li>
+                                <li class="breadcrumb-item"><a href="/view/admin-test-email.php">Admin Test Email</a></li>
+								<li class="breadcrumb-item active"> Terms of Service</li>
 							</ol>
 						</div>
 					</div>
@@ -96,17 +95,11 @@ require __DIR__ . '/../vendor/autoload.php';
 		<?php printMessages($messages);?>
 			<div class="card">
 				<div class="card-content collapse show">
-					<form class="form-horizontal form-purchase-token" 	action="process-admin-test-email.php" method="POST">
+					<form class="form-horizontal form-purchase-token" 	action="process-admin-terms-register.php" method="POST">
 						<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
 						<div class="card-body row">
 							<div class="col-md-12 col-12 mb-1">
-								To: <input class="form-control" name="to">
-							</div>
-							<div class="col-md-12 col-12 mb-1">
-								Subject: <input class="form-control" name="subject">
-							</div>
-							<div class="col-md-12 col-12 mb-1">
-								Body: <textarea class="form-control" name="body"></textarea>
+								Terms: <textarea class="form-control" name="terms_register"><?=$config['terms_register']?></textarea>
 							</div>
 						</div>
 						<hr>
@@ -114,7 +107,7 @@ require __DIR__ . '/../vendor/autoload.php';
 						<div class="row">
 							<div class="col-md-10 col-12 mb-1"></div>
 							<div class="col-md-2 col-12 mb-1">
-								<input type="submit" class="btn-gradient-primary mt-2" value="Send">
+								<input type="submit" class="btn-gradient-primary mt-2" value="Save">
 							</div>
 
 						</div>

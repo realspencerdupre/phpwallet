@@ -86,6 +86,7 @@ $currencies = $mysqli->query('SELECT * from currencies;');
 								<li class="breadcrumb-item active">Admin Settings</li>
 								<li class="breadcrumb-item"> <a href="/view/admin-wallet.php">Admin Wallet</a> </li>
 								<li class="breadcrumb-item"> <a href="/view/admin-test-email.php">Admin Test Email</a> </li>
+								<li class="breadcrumb-item"> <a href="/view/admin-terms-register.php">Terms of Service</a> </li>
 							</ol>
 						</div>
 					</div>
@@ -107,7 +108,8 @@ $currencies = $mysqli->query('SELECT * from currencies;');
 							$remfields = [
 								'id'=>0,
 								'private'=>0,
-								'public'=>0
+								'public'=>0,
+								'terms_register'=>0,
 							];
 							$loopconf = array_diff_key($config, $remfields);
 							foreach($loopconf as $field => $value) {

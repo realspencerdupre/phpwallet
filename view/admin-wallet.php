@@ -124,6 +124,7 @@ else
 								<li class="breadcrumb-item"><a href="/view/admin-settings.php">Admin Settings</a></li>
 								<li class="breadcrumb-item active">Admin Wallet</li>
 								<li class="breadcrumb-item"><a href="/view/admin-test-email.php">Admin Test Email</a></li>
+								<li class="breadcrumb-item"> <a href="/view/admin-terms-register.php">Terms of Service</a></li>
 							</ol>
 						</div>
 					</div>
