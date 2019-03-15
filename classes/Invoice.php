@@ -14,10 +14,8 @@ require __DIR__ . '/../vendor/autoload.php';
 
 
 
-Bitcoin::setNetwork(NetworkFactory::bitcoinTestnet());
+// Bitcoin::setNetwork(NetworkFactory::bitcoinTestnet());
 
-//ini_set('error_reporting', E_ALL);
-//ini_set('display_errors', 'On');
 class Invoice {
 
 	private $mysqli;

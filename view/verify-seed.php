@@ -149,7 +149,7 @@ if (!(strlen($_POST['masterPubKey']) > 10)) {
 	function checkSeed() {
 		var seed = bip39.mnemonicToSeed(seedInput.value);
 		var master = bip32.fromSeed(seed);
-		master.network = bitcoin.networks.testnet;
+		// master.network = bitcoin.networks.testnet;
 		var pub = master.neutered().toBase58();
 		return(pub == masterPubKey);
 	}

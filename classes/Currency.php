@@ -8,15 +8,12 @@ class Currency {
 
     private $mysqli;
     public static $api_options = [
-        'btc_block_cypher_testnet' => [
-            'name' => 'BTC Blockcypher Testnet',
-            'url' => 'https://api.blockcypher.com/v1/btc/test3/addrs/<address>/full?limit=50&confirmations=<confirmations>',
+        'btc_blockcypher' => [
+            'name' => 'BTC Blockcypher.com',
+            'address_url' => 'https://api.blockcypher.com/v1/btc/main/addrs/<address>/full?limit=50&confirmations=<confirmations>',
             'jsonpath' => '$.balance',
-        ],
-        'btc_chainso_testnet' => [
-            'name' => 'BTC Chain.so Testnet',
-            'url' => 'https://chain.so/api/v2/get_address_balance/BTCTEST/<address>/<confirmations>',
-            'jsonpath' => '$.data.confirmed_balance',
+            'submittx_url' => 'http://localhost:7000/view/process-submittx.php?tx=<hex>',
+            'tx_url' => 'https://live.blockcypher.com/btc/tx/<txid>/',
         ],
     ];
 

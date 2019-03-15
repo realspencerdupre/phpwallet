@@ -29,7 +29,7 @@ if ($invoice['cancelled']) {
 $currency_code = $invoice['pay_curr'];
 $currency = $mysqli->query("SELECT fullname FROM currencies WHERE short = '$currency_code';")->fetch_assoc();
 $currency = Currency::get($mysqli, $currency['fullname']);
-$jsonurl = str_replace('<address>', $invoice['pay_addr'], $currency->balance_api['url']);
+$jsonurl = str_replace('<address>', $invoice['pay_addr'], $currency->balance_api['address_url']);
 
 // Always use 0 conf, we don't want any incoming funds
 $jsonurl = str_replace('<confirmations>', 0, $jsonurl);

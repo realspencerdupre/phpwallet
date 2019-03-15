@@ -29,7 +29,7 @@ function scanInvoices() {
         $currency = $mysqli->query("SELECT * FROM currencies WHERE short = '$currency_code';")->fetch_assoc();
         $currency = Currency::get($mysqli, $currency['fullname']);
         print $currency->short;
-        $jsonurl = str_replace('<address>', $btcaddr, $currency->balance_api['url']);
+        $jsonurl = str_replace('<address>', $btcaddr, $currency->balance_api['address_url']);
         $jsonurl = str_replace('<confirmations>', $currency->required_conf, $jsonurl);
         $json = file_get_contents($jsonurl);
         time_nanosleep(0, intdiv(1000000000, 3));

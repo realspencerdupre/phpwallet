@@ -160,8 +160,11 @@ else
 							</div>
 						</div>
 						<?php 
+	$bitcoin = Currency::get($mysqli, 'Bitcoin');
 	while ($row = $invoices->fetch_assoc()) {
-		$apiurl = "https://api.blockcypher.com/v1/btc/test3/addrs/{$row['pay_addr']}/full?limit=50&confirmations=$required_confirmations";
+		$apiurl = $bitcoin->balance_api['address_url'];
+		$apiurl = str_replace('<address>', $row['pay_addr'], $apiurl);
+		$apiurl = str_replace('<confirmations>', $required_confirmations, $apiurl);
 		$json = json_decode(file_get_contents($apiurl));
 ?>
 							<!-- BTC -->
@@ -285,55 +288,78 @@ echo date("Y"); ?> Blockstarter, All rights reserved. </span><span class="float-
 	<script src="/assets/js/aes.js"></script>
 	<script src="/assets/js/hexutil.js"></script>
 	<script>
+	var submit_url = "<?=$bitcoin->balance_api['submittx_url'];?>";
+	var tx_url = "<?=$bitcoin->balance_api['tx_url'];?>";
 	function finishSweep(data, priv, obj) {
-		const txb = new bitcoin.TransactionBuilder(bitcoin.networks.testnet)
+		const txb = new bitcoin.TransactionBuilder(bitcoin.networks.bitcoin)
 		fees = 0;
-		for(tx of data.txrefs) {
-			txb.addInput(tx.tx_hash, tx.tx_output_n)
+		for(tx of data.txs) {
+			n = false;
+			tx.outputs.forEach(function (value, i) {
+				if (value.addresses && value.addresses[0] == obj.dataset.address) {
+					n = i;
+				}
+			});
+			if (n != false) {
+				txb.addInput(tx.hash, n)
+			}
 				// fees += 876015;
 		}
 		to = document.getElementById('sweep_' + obj.dataset.address);
 		txb.addOutput(to.value, data.balance - fees);
-		for(const x of Array(data.txrefs.length).keys()) {
+		for(const x of Array(txb.__inputs.length).keys()) {
 			txb.sign(x, priv);
 		}
 		size = (txb.build().toHex().length / 2) + 50;
 		fees = size * <?=$satoshis_per_byte?>;
-		console.log("tx fee", fees, 'size', size);
 		txb.__tx.outs[0].value -= fees;
-		console.log('txb', txb);
 		for(inp of txb.__inputs) {
 			inp.signatures = [];
 		}
-		for(const x of Array(data.txrefs.length).keys()) {
+		for(const x of Array(txb.__inputs.length).keys()) {
 			txb.sign(x, priv);
 		}
 		conf_message = "Are you sure you want to send " + ((data.balance - fees) / 100000000) + " BTC to " + to.value + "?";
 		if(confirm(conf_message)) {
 			built = txb.build();
-			hex = document.getElementById('hex_' + obj.dataset.address);
-			hex.innerHTML = built.toHex();
-			txurl = "https://live.blockcypher.com/btc-testnet/tx/" + built.getId() + "/";
 			txhref = document.getElementById('txhref_' + obj.dataset.address);
-			txhref.href = txurl;
-			txhref.innerHTML = built.getId();
+			txhref.href = '';
+			txhref.innerHTML = 'Sweeping...';
 			to.value = '';
+			sub_url = submit_url;
+			sub_url = sub_url.replace('<hex>', built.toHex());
+			$.get(sub_url, function(data) {
+				finallySweep(data, obj, built)
+			});
 		}
+	}
+	function finallySweep(data, obj, tx) {
+		// hex = document.getElementById('hex_' + obj.dataset.address);
+		// hex.innerHTML = tx.toHex();
+		url = tx_url;
+		url = url.replace('<txid>', tx.getId());
+		txhref = document.getElementById('txhref_' + obj.dataset.address);
+		txhref.href = url;
+		txhref.innerHTML = tx.getId();
 	}
 
 	function sweepAddress(obj) {
+		console.log('Sweeping address: ', obj.dataset.address);
 		addr = obj.dataset.address;
 		index = obj.dataset.index;
 		passw = prompt('Enter wallet passphrase', '');
 		decrypted = hexutil.dec(encryptedSeed, passw);
-		seed = bip32.fromBase58(decrypted, bitcoin.networks.testnet);
+		seed = bip32.fromBase58(decrypted);
+		seed.network = bitcoin.networks.bitcoin;
 		path = 'm/44/0/' + index + '/0/0';
 		priv = seed.derivePath(path);
 		address = bitcoin.payments.p2pkh({
 			pubkey: priv.publicKey,
-			network: bitcoin.networks.testnet
+			network: bitcoin.networks.bitcoin
 		}).address;
-		url = "https://api.blockcypher.com/v1/btc/test3/addrs/" + address + "?limit=50&unspentOnly=1";
+		url = "<?=$bitcoin->balance_api['address_url'];?>";
+		url = url.replace('<address>', address);
+		url = url.replace('<confirmations>', 1);
 		$.getJSON(url, function(data) {
 			finishSweep(data, priv, obj)
 		});

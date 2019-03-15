@@ -153,7 +153,7 @@ include "../require_admin.php"
         var words = bip39.generateMnemonic();
         var seed = bip39.mnemonicToSeed(words);
         inter = bip32.fromSeed(seed);
-        inter.network = bitcoin.networks.testnet;
+        // inter.network = bitcoin.networks.testnet;
         var masterKey = inter.toBase58();
         var masterPubKey = inter.neutered().toBase58();
         seedDisplay = document.getElementById('seedDisplay');
