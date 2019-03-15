@@ -50,7 +50,7 @@ chdir(BASE_PATH)
 db = get_db(BASE_PATH)
 
 cursor = db.cursor()
-cursor.execute("SELECT * FROM configuration")
+cursor.execute("SELECT * FROM configuration;")
 config = cursor.fetchone()
 currM = int(config['current_migration'])
 
