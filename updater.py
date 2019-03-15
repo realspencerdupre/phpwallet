@@ -52,6 +52,7 @@ db = get_db(BASE_PATH)
 cursor = db.cursor()
 cursor.execute("SELECT * FROM configuration;")
 config = cursor.fetchone()
+db.close()
 currM = int(config['current_migration'])
 
 run(['git', 'pull'])
@@ -79,6 +80,9 @@ for f in files:
             print(e)
             conn.rollback()
         currM = int(f[:4])
+
+db = get_db(BASE_PATH)
+cursor = db.cursor()
 
 if not did_migrate:
     print('No new migrations found')
