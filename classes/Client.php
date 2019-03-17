@@ -61,6 +61,13 @@ class Client {
 		echo "Placing hold for $amount for $user_session\n";
 		return $result;
 	}
+	function release_hold($user_session, $amount) {
+		global $hot_account_main;
+		global $hot_account_wait;
+		$result = $this->jsonrpc->move("zelles($hot_account_wait)", "zelles($hot_account_main)", $amount);
+		echo "Releasing hold for $amount for $user_session\n";
+		return $result;
+	}
 	function credit($user_session, $amount)
 	{
 		global $hot_account_wait;

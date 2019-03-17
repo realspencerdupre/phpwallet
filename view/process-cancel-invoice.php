@@ -14,7 +14,7 @@ if ($_POST['token'] == $_SESSION['token']) {
 }
 
 $inv_id = intval($_POST['id']);
-$invoice = $mysqli->query("SELECT cancelled, uuid, pay_curr, pay_addr FROM invoices WHERE id = $inv_id;");
+$invoice = $mysqli->query("SELECT cancelled, uuid, pay_curr, pay_addr, tok_amt FROM invoices WHERE id = $inv_id;");
 if (is_null($invoice)) {
     addMessage("Invalid invoice", 'warning');
     header('Location: admin-wallet.php'); die();
@@ -43,7 +43,10 @@ if ($bal != 0) {
     header('Location: admin-wallet.php'); die();
 }
 
-$result = $mysqli->query("UPDATE invoices SET cancelled = 1 WHERE id = $inv_id;");
+$tx = $client->release_hold($user_session, floatval(bcdiv($invoice['tok_amt'], 100000000)));
+if ($tx) {
+    $result = $mysqli->query("UPDATE invoices SET cancelled = 1 WHERE id = $inv_id;");
+}
 if (is_null($result)) {
     addMessage("Invoice cancellation failed", 'warning');
     header('Location: admin-wallet.php'); die();
