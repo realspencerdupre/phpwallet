@@ -12,7 +12,7 @@ class Currency {
             'name' => 'BTC Blockcypher.com',
             'address_url' => 'https://api.blockcypher.com/v1/btc/main/addrs/<address>/full?limit=50&confirmations=<confirmations>',
             'jsonpath' => '$.balance',
-            'submittx_url' => 'http://localhost:7000/view/process-submittx.php?tx=<hex>',
+            'submittx_url' => '/view/process-submittx.php?tx=<hex>',
             'tx_url' => 'https://live.blockcypher.com/btc/tx/<txid>/',
         ],
     ];

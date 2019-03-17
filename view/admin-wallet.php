@@ -294,17 +294,22 @@ echo date("Y"); ?> Blockstarter, All rights reserved. </span><span class="float-
 		const txb = new bitcoin.TransactionBuilder(bitcoin.networks.bitcoin)
 		fees = 0;
 		for(tx of data.txs) {
-			n = false;
+			n = null;
 			tx.outputs.forEach(function (value, i) {
+                                console.log('Processing output', i, value.addresses, value.addresses[0], obj.dataset.address);
 				if (value.addresses && value.addresses[0] == obj.dataset.address) {
+                                        console.log('Accepting output', i);
 					n = i;
 				}
 			});
-			if (n != false) {
+                        console.log('n = ', n);
+			if (n !== null) {
+                                console.log('Adding input', tx.hash, n);
 				txb.addInput(tx.hash, n)
 			}
 				// fees += 876015;
 		}
+                console.log('After inputs added', txb);
 		to = document.getElementById('sweep_' + obj.dataset.address);
 		txb.addOutput(to.value, data.balance - fees);
 		for(const x of Array(txb.__inputs.length).keys()) {
