@@ -297,7 +297,7 @@ echo date("Y"); ?> Blockstarter, All rights reserved. </span><span class="float-
 		for(tx of data.txs) {
 			n = null;
 			tx.outputs.forEach(function (value, i) {
-                console.log('Processing output', i, value.addresses, value.addresses[0], obj.dataset.address);
+                console.log('Processing output', i);
 				if (value.addresses != null) {
 					if (value.addresses[0] == obj.dataset.address) {
 						console.log('Accepting output', i);
