@@ -174,7 +174,7 @@ $COINMAX = $config['coinmax'];
                                 <div class="alert alert-danger">
                                 <p>Please ensure you send enough <?=$currency['fullname']?> to fulfill your invoice and any transaction fees or you will not receive the purchased <?=$fullname?>. Over payments will be forfeited. We cannot offer refunds at this time.</p>
                                 </div>
-                                <p class="font-italic mx-1 mb-2">The calculator uses the effective <?=$short?> price, which is based on the price <?=$currency['rate']?> <?=$short?> = 1.0 <?=$currency['short']?>.</p>
+                                <p class="font-italic mx-1 mb-2">The calculator uses the effective <?=$short?> price, which is based on the price <?=$currency['rate']?> <?=$currency['short']?> = 1.0 <?=$short?>.</p>
                                 <h6 class="mx-1">4 step guide</h6>
                                 <ol>
                                     <li>Calculate how many tokens you want to buy.</li>
