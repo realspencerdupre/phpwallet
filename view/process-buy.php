@@ -9,6 +9,11 @@ use BitWasp\Bitcoin\Network\NetworkFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+$query = $mysqli->query("SELECT * FROM configuration;");
+$config = $query->fetch_assoc();
+$hdFactory = new HierarchicalKeyFactory();
+$xpub = $hdFactory->fromExtended($config['public']);
+$invoice = new Invoice($mysqli, $xpub);
 
 if ($_POST['token'] == $_SESSION['token']) {
     $_SESSION['token'] = sha1('@s%a$l£t#'.rand(0, 32000));
@@ -18,29 +23,23 @@ if ($_POST['token'] == $_SESSION['token']) {
     header('Location: buy-ico.php'); die();
 }
 
-$hdFactory = new HierarchicalKeyFactory();
-
-$query = $mysqli->query("SELECT * FROM invoices WHERE user = '${_SESSION['user_session']}'and confirmed = 0;");
+$query = $mysqli->query("SELECT * FROM invoices WHERE user = '${_SESSION['user_session']}'and confirmed = 0 and cancelled = 0;");
 $existing = $query->fetch_assoc();
 if ($existing) {
     header("Location: invoice.php?id=".$existing['id']);
     die('pre-existing invoice');
 }
 
-$query = $mysqli->query("SELECT * FROM configuration WHERE id = 1;");
-$config = $query->fetch_assoc();
-$xpub = $hdFactory->fromExtended($config['public']);
-
-$COINMAX = $config['coinmax'];
-if (floatval($_POST["amount"]) > $COINMAX) {
-    addMessage("{$_POST['amount']} $short is more than the maximum buy of $COINMAX", 'warning');
+$COINMAX = min($config['coinmax'], $client->getBalance($hot_account_main));
+if (bccomp($_POST['amount'], $COINMAX) == 1) {
+    addMessage("{$_POST['amount']} $short exceeds the buy limit", 'warning');
     header("Location: buy-ico.php");
     die();
 }
 
-$amount = intval(floatval($_POST["amount"]) * 100000000);
+$amount = bcmul($_POST['amount'], 100000000);
 
-if ($amount == 0) {
+if (bccomp($amount, 0) == 0) {
     addMessage("Amount must be greater than 0", 'warning');
     header("Location: buy-ico.php");
     die();
@@ -49,12 +48,21 @@ if ($amount == 0) {
 $curr_name = $mysqli->real_escape_string($_POST['currency']);
 $currency = Currency::get($mysqli, $curr_name);
 
-$pay_amount = intval($amount * $currency->rate);
-$invoice = new Invoice($mysqli, $xpub);
+$pay_amount = bcmul($amount, $currency->rate);
 $success = $invoice->add($amount, $pay_amount, $user_session, "BTC");
+if (!$success) {
+    addMessage("Purchase order conflicted with another purchase, please try again", 'warning');
+    header("Location: buy-ico.php");
+    die();
+}
+
+// JSON library requires float, seems OK for just typing a string
+$client->placehold($user_session, floatval(bcdiv($amount, 100000000, 8)));
 $uuid = $invoice->uuid;
 if ($success) {
-    header("Location: invoice.php?uuid=$uuid");
+    header("Location: invoice.php?uuid=$uuid"); die();
+} else {
+    echo var_dump($mysqli);
 }
 
 

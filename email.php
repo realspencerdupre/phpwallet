@@ -12,11 +12,11 @@ $mysqli = new Mysqli($db_host, $db_user, $db_pass, $db_name);
 $query = $mysqli->query("SELECT * FROM configuration WHERE id = 1;");
 $config = $query->fetch_assoc();
 
-function createConf($username, $newemail) {
+function createConf($username, $newemail, $type='change') {
     global $mysqli;
     $code = sha1('@s%a$l£t#'.rand(0, 32000));
     $date = date("c");
-    $q = "INSERT INTO confirmations (user, email, code, date) VALUES ('$username', '$newemail', '$code', '$date');";
+    $q = "INSERT INTO confirmations (user, email, code, date, type) VALUES ('$username', '$newemail', '$code', '$date', '$type');";
     $q = $mysqli->query($q);
     if ($mysqli) return $code;
     return null;

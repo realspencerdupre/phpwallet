@@ -3,6 +3,9 @@ define("IN_WALLET", true);
 include ('../common.php');
 $mysqli = new Mysqli($db_host, $db_user, $db_pass, $db_name);
 include ("../setup_view.php");
+
+$page = $_GET['page'] ? $_GET['page'] : 1;
+$offset = (intval($page) - 1) * 5;
 ?>
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
@@ -18,8 +21,7 @@ include ("../setup_view.php");
         <?=$fullname?>
     </title>
     <link rel="apple-touch-icon" href="/assets/images/ico/apple-icon-120.png">
-    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/ico/favicon.ico">
-    <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i|Comfortaa:300,400,500,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i|Comfortaa:300,400,500,700" rel="stylesheet">
     <!-- BEGIN VENDOR CSS-->
     <link rel="stylesheet" type="text/css" href="/assets/css/vendors.css">
     <!-- END VENDOR CSS-->
@@ -34,7 +36,26 @@ include ("../setup_view.php");
     <!-- BEGIN Custom CSS-->
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
     <!-- END Custom CSS-->
-</head>
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/assets/images/logo/logo.png" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="128x128" />
+    <meta name="application-name" content="<?=$fullname?> Wallet"/>
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileImage" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square70x70logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square150x150logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-wide310x150logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square310x310logo" content="/assets/images/logo/logo.png" /></head>
 
 <body class="vertical-layout vertical-compact-menu 2-columns   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-compact-menu" data-col="2-columns">
     <?php include_once('nav.php'); ?>
@@ -80,7 +101,7 @@ include ("../setup_view.php");
                             <div class="history-table-tbody">
                                 <?php 
     $username = $_SESSION['user_session'];
-    $logins = $mysqli->query("SELECT * FROM logins WHERE user = '$username' ORDER BY -id;");
+    $logins = $mysqli->query("SELECT * FROM logins WHERE user = '$username' ORDER BY -id LIMIT 5 OFFSET $offset;");
     while ($login = $logins->fetch_assoc()) {
         
         $datetime = $login['datetime'];
@@ -126,21 +147,33 @@ include ("../setup_view.php");
                                         </div>
                                     </section>
                                     <?php }?>
-                                        <nav aria-label="Page navigation">
-                                            <ul class="pagination justify-content-center pagination-separate pagination-flat">
-                                                <li class="page-item">
-                                                    <a class="page-link" href="#" aria-label="Previous"> <span aria-hidden="true">« Prev</span> <span class="sr-only">Previous</span> </a>
-                                                </li>
-                                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                                                <li class="page-item">
-                                                    <a class="page-link" href="#" aria-label="Next"> <span aria-hidden="true">Next »</span> <span class="sr-only">Next</span> </a>
-                                                </li>
-                                            </ul>
-                                        </nav>
+
+                                    <nav aria-label="Page navigation">
+<ul class="pagination justify-content-center pagination-separate pagination-flat">
+	<?php if ($page > 3) { ?>
+		<li class="page-item">
+			<a class="page-link" href="account-login-history.php" aria-label="Previous"> <span aria-hidden="true">First</span> <span class="sr-only">First</span> </a>
+		</li>
+	<?php } ?>
+	<li class="page-item">
+		<a class="page-link" href="account-login-history.php?page=<?=$page > 1 ? $page - 1 : 1?>" aria-label="Previous"> <span aria-hidden="true">« Prev</span> <span class="sr-only">Previous</span> </a>
+	</li>
+	<?php
+		if ($page > 3) {
+			$pagerange = range($page - 2, $page + 2);
+		} else {
+			$pagerange = range(1, 5);
+		}
+		foreach ($pagerange as $p) {
+	?>
+		<li class="page-item <?php if ($p == $page) echo 'active';?>"><a class="page-link" href="account-login-history.php?page=<?=$p?>"><?=$p?></a></li>
+	<?php } ?>
+	<li class="page-item">
+		<a class="page-link" href="account-login-history.php?page=<?= $page+1 ?>" aria-label="Next"> <span aria-hidden="true">Next »</span> <span class="sr-only">Next</span> </a>
+	</li>
+</ul>
+						</nav>
+
                             </div>
                         </div>
                     </div>

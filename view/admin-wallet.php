@@ -55,9 +55,9 @@ function pubkeyToEtherAddress($pubkey) {
 
 $all = $_GET['all'];
 if ($all)
-	$invoices = $mysqli->query('SELECT * from invoices;');
+	$invoices = $mysqli->query('SELECT * from invoices where cancelled=0;');
 else
-	$invoices = $mysqli->query('SELECT * from invoices where swept = 0;');
+	$invoices = $mysqli->query('SELECT * from invoices where swept=0 and cancelled=0;');
 
 ?>
 <!DOCTYPE html>
@@ -74,9 +74,7 @@ else
 	<title>Wallet -
 		<?php echo $fullname ?>
 	</title>
-	<link rel="apple-touch-icon" href="/assets/images/ico/apple-icon-120.png">
-	<link rel="shortcut icon" type="image/x-icon" href="/assets/images/ico/favicon.ico">
-	<link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i|Comfortaa:300,400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i|Comfortaa:300,400,500,700" rel="stylesheet">
 	<!-- BEGIN VENDOR CSS-->
 	<link rel="stylesheet" type="text/css" href="/assets/css/vendors.css">
 	<!-- END VENDOR CSS-->
@@ -91,7 +89,26 @@ else
 	<!-- BEGIN Custom CSS-->
 	<link rel="stylesheet" type="text/css" href="/assets/css/style.css">
 	<!-- END Custom CSS-->
-</head>
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/assets/images/logo/logo.png" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="128x128" />
+    <meta name="application-name" content="<?=$fullname?> Wallet"/>
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileImage" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square70x70logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square150x150logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-wide310x150logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square310x310logo" content="/assets/images/logo/logo.png" /></head>
 
 <body class="vertical-layout vertical-compact-menu content-detached-right-sidebar   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-compact-menu" data-col="content-detached-right-sidebar">
 	<?php include_once('nav.php'); ?>
@@ -107,6 +124,7 @@ else
 								<li class="breadcrumb-item"><a href="/view/admin-settings.php">Admin Settings</a></li>
 								<li class="breadcrumb-item active">Admin Wallet</li>
 								<li class="breadcrumb-item"><a href="/view/admin-test-email.php">Admin Test Email</a></li>
+								<li class="breadcrumb-item"> <a href="/view/admin-terms-register.php">Terms of Service</a></li>
 							</ol>
 						</div>
 					</div>
@@ -114,6 +132,7 @@ else
 			</div>
 			<div class="content-detached content-left">
 				<div class="content-body col-md-12">
+					<?php printMessages($messages);?>
 					<div class="row">
 						<div class="col-md-8">
 							<h6 class="my-2">Invoices</h6>
@@ -141,8 +160,11 @@ else
 							</div>
 						</div>
 						<?php 
+	$bitcoin = Currency::get($mysqli, 'Bitcoin');
 	while ($row = $invoices->fetch_assoc()) {
-		$apiurl = "https://api.blockcypher.com/v1/btc/test3/addrs/{$row['pay_addr']}/full?limit=50&confirmations=$required_confirmations";
+		$apiurl = $bitcoin->balance_api['address_url'];
+		$apiurl = str_replace('<address>', $row['pay_addr'], $apiurl);
+		$apiurl = str_replace('<confirmations>', $required_confirmations, $apiurl);
 		$json = json_decode(file_get_contents($apiurl));
 ?>
 							<!-- BTC -->
@@ -150,48 +172,57 @@ else
 								<div class="card-content">
 									<div class="card-body">
 										<div class="col-12">
-											<div class="row">
-												<div class="col-md-4 col-12 py-1">
-													<div class="media">
-														<div class="media-body">
-															<h5 class="mt-0 text-capitalize"><?php echo $row['user'];?></h5>
-															<p class="text-muted mb-0 font-small-3 wallet-address">
-																<?php
-								echo substr($row['pay_addr'], 0, 20), '...';
-								echo "<p><a href=\"$apiurl\">api data</a></p>";
-							?> </p>
-														</div>
-													</div>
-												</div>
-												<div class="col-md-3 col-12 py-1 text-center">
-													<p>Pay <strong><?php echo satoshitize($row['pay_amt'] / 100000000) . ' ' . $row['pay_curr']; ?></strong></p>
-													<p>Get <strong><?php echo satoshitize($row['tok_amt'] / 100000000) . ' ' . $short; ?></strong></p>
-													<hr>
-													<?php if (!$row['swept']) {?>
-														<p>Balance <strong><?php echo satoshitize($json->balance / 100000000) . ' ' . $row['pay_curr']; ?></strong></p>
-														<p>Bal. (0 conf) <strong><?php echo satoshitize($json->unconfirmed_balance / 100000000) . ' ' . $row['pay_curr']; ?></strong></p>
-														<p class="text-muted mb-0 font-small-3">
-															<!-- Exchange converted value -->
-														</p>
-														<?php } else {?>
-															<p><strong>Swept</strong></p>
-															<?php } ?>
-												</div>
-												<div class="col-md-5 col-12 py-1 text-center">
-													<?php if (!$row['swept']) {?>
-														<input id="sweep_<?php echo $row['pay_addr']; ?>" placeholder="address...">
-														<button onclick="sweepAddress(this)" class="btn-primary btn line-height-3" data-address="<?php echo $row['pay_addr']; ?>" data-index="<?php echo $row['id']; ?>">Sweep</button>
-														<?php } ?>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-md-12 col-12 py-1">
-													<p id="hex_<?php echo $row['pay_addr']; ?>"></p>
-													<p>
-														<a id="txhref_<?php echo $row['pay_addr']; ?>" href="#"></a>
-													</p>
-												</div>
-											</div>
+<div class="row">
+	<div class="col-md-4 col-12 py-1">
+		<div class="media">
+			<div class="media-body">
+				<h5 class="mt-0 text-capitalize"><?php echo $row['user'];?></h5>
+				<p class="text-muted mb-0 font-small-3 wallet-address">
+					<?=$row['pay_addr']?>
+				
+				<p><a href="<?=$apiurl?>">api data</a></p>
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3 col-12 py-1 text-center">
+		<p>Pay <strong><?php echo satoshitize($row['pay_amt'] / 100000000) . ' ' . $row['pay_curr']; ?></strong></p>
+		<p>Get <strong><?php echo satoshitize($row['tok_amt'] / 100000000) . ' ' . $short; ?></strong></p>
+		<hr>
+		<?php if (!$row['swept']) {?>
+			<p>Balance <strong><?php echo satoshitize($json->balance / 100000000) . ' ' . $row['pay_curr']; ?></strong></p>
+			<p>Bal. (0 conf) <strong><?php echo satoshitize($json->unconfirmed_balance / 100000000) . ' ' . $row['pay_curr']; ?></strong></p>
+			<p class="text-muted mb-0 font-small-3">
+				<!-- Exchange converted value -->
+			</p>
+			<?php } else {?>
+				<p><strong>Swept</strong></p>
+				<?php } ?>
+	</div>
+	<div class="col-md-5 col-12 py-1 ">
+		<?php if (!$row['swept']) {?>
+			<input id="sweep_<?php echo $row['pay_addr']; ?>" placeholder="address...">
+			<button onclick="sweepAddress(this)" class="btn-primary btn line-height-3" data-address="<?php echo $row['pay_addr']; ?>" data-index="<?php echo $row['id']; ?>">Sweep</button>
+		<?php } ?>
+		<br><br><br>
+		<?php if (!$row['confirmed']) {?>
+			<form 	action="process-cancel-invoice.php" method="POST" onsubmit="return confirm('Are you sure you want to cancel this invoice?');">
+			<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
+			<input type="hidden" name="id" value="<?=$row['id']?>">
+			<strong>Cancel invoice: </strong>
+			<button class="btn-danger btn line-height-1" data-address="" type="submit">Cancel</button>
+			</form>
+		<?php } ?>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12 col-12 py-1">
+		<p id="hex_<?php echo $row['pay_addr']; ?>"></p>
+		<p>
+			<a id="txhref_<?php echo $row['pay_addr']; ?>" href="#"></a>
+		</p>
+	</div>
+</div>
 										</div>
 									</div>
 								</div>
@@ -210,7 +241,7 @@ else
 										<p>Balance:
 				<?php
 					$accTotal = 0;
-					$q = $mysqli->query('SELECT * FROM users WHERE username != "piWallet";');
+					$q = $mysqli->query("SELECT * FROM users WHERE username != '$hot_account_main';");
 					$i = $q->fetch_assoc();
 					while($i) {
 					$accTotal += $client->getBalance($i['username']);
@@ -227,7 +258,7 @@ else
 											<?php echo $total - $accTotal; ?>
 										</p>
 										<p>Admin address:
-											<?php echo $client->getAddress('piWallet');?>
+											<?php echo $client->getAddress($hot_account_main);?>
 										</p>
 									</div>
 								</div>
@@ -257,55 +288,85 @@ echo date("Y"); ?> Blockstarter, All rights reserved. </span><span class="float-
 	<script src="/assets/js/aes.js"></script>
 	<script src="/assets/js/hexutil.js"></script>
 	<script>
+	var submit_url = "<?=$bitcoin->balance_api['submittx_url'];?>";
+	var tx_url = "<?=$bitcoin->balance_api['tx_url'];?>";
 	function finishSweep(data, priv, obj) {
-		const txb = new bitcoin.TransactionBuilder(bitcoin.networks.testnet)
+		const txb = new bitcoin.TransactionBuilder(bitcoin.networks.bitcoin)
 		fees = 0;
-		for(tx of data.txrefs) {
-			txb.addInput(tx.tx_hash, tx.tx_output_n)
-				// fees += 876015;
+		console.log(data);
+		for(tx of data.txs) {
+			n = null;
+			tx.outputs.forEach(function (value, i) {
+                console.log('Processing output', i);
+				if (value.addresses != null) {
+					if (value.addresses[0] == obj.dataset.address) {
+						console.log('Accepting output', i);
+						n = i;
+					}
+				}
+			});
+			console.log('n = ', n);
+			if (n !== null) {
+				console.log('Adding input', tx.hash, n);
+				txb.addInput(tx.hash, n)
+			}
 		}
+		console.log('After inputs added', txb);
 		to = document.getElementById('sweep_' + obj.dataset.address);
 		txb.addOutput(to.value, data.balance - fees);
-		for(const x of Array(data.txrefs.length).keys()) {
+		for(const x of Array(txb.__inputs.length).keys()) {
 			txb.sign(x, priv);
 		}
 		size = (txb.build().toHex().length / 2) + 50;
 		fees = size * <?=$satoshis_per_byte?>;
-		console.log("tx fee", fees, 'size', size);
 		txb.__tx.outs[0].value -= fees;
-		console.log('txb', txb);
 		for(inp of txb.__inputs) {
 			inp.signatures = [];
 		}
-		for(const x of Array(data.txrefs.length).keys()) {
+		for(const x of Array(txb.__inputs.length).keys()) {
 			txb.sign(x, priv);
 		}
 		conf_message = "Are you sure you want to send " + ((data.balance - fees) / 100000000) + " BTC to " + to.value + "?";
 		if(confirm(conf_message)) {
 			built = txb.build();
-			hex = document.getElementById('hex_' + obj.dataset.address);
-			hex.innerHTML = built.toHex();
-			txurl = "https://live.blockcypher.com/btc-testnet/tx/" + built.getId() + "/";
 			txhref = document.getElementById('txhref_' + obj.dataset.address);
-			txhref.href = txurl;
-			txhref.innerHTML = built.getId();
+			txhref.href = '';
+			txhref.innerHTML = 'Sweeping...';
 			to.value = '';
+			sub_url = submit_url;
+			sub_url = sub_url.replace('<hex>', built.toHex());
+			$.get(sub_url, function(data) {
+				finallySweep(data, obj, built)
+			});
 		}
+	}
+	function finallySweep(data, obj, tx) {
+		// hex = document.getElementById('hex_' + obj.dataset.address);
+		// hex.innerHTML = tx.toHex();
+		url = tx_url;
+		url = url.replace('<txid>', tx.getId());
+		txhref = document.getElementById('txhref_' + obj.dataset.address);
+		txhref.href = url;
+		txhref.innerHTML = tx.getId();
 	}
 
 	function sweepAddress(obj) {
+		console.log('Sweeping address: ', obj.dataset.address);
 		addr = obj.dataset.address;
 		index = obj.dataset.index;
 		passw = prompt('Enter wallet passphrase', '');
 		decrypted = hexutil.dec(encryptedSeed, passw);
-		seed = bip32.fromBase58(decrypted, bitcoin.networks.testnet);
+		seed = bip32.fromBase58(decrypted);
+		seed.network = bitcoin.networks.bitcoin;
 		path = 'm/44/0/' + index + '/0/0';
 		priv = seed.derivePath(path);
 		address = bitcoin.payments.p2pkh({
 			pubkey: priv.publicKey,
-			network: bitcoin.networks.testnet
+			network: bitcoin.networks.bitcoin
 		}).address;
-		url = "https://api.blockcypher.com/v1/btc/test3/addrs/" + address + "?limit=50&unspentOnly=1";
+		url = "<?=$bitcoin->balance_api['address_url'];?>";
+		url = url.replace('<address>', address);
+		url = url.replace('<confirmations>', 1);
 		$.getJSON(url, function(data) {
 			finishSweep(data, priv, obj)
 		});

@@ -5,6 +5,7 @@ $mysqli = new Mysqli($db_host, $db_user, $db_pass, $db_name);
 include ("../setup_view.php");
 
 $transactionList = $client->getTransactionList($user_session, $txpage);
+
 ?>
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
@@ -19,9 +20,7 @@ $transactionList = $client->getTransactionList($user_session, $txpage);
 	<title>Transactions -
 		<?=$fullname?>
 	</title>
-	<link rel="apple-touch-icon" href="/assets/images/ico/apple-icon-120.png">
-	<link rel="shortcut icon" type="image/x-icon" href="/assets/images/ico/favicon.ico">
-	<link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i|Comfortaa:300,400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i|Comfortaa:300,400,500,700" rel="stylesheet">
 	<!-- BEGIN VENDOR CSS-->
 	<link rel="stylesheet" type="text/css" href="/assets/css/vendors.css">
 	<!-- END VENDOR CSS-->
@@ -36,7 +35,26 @@ $transactionList = $client->getTransactionList($user_session, $txpage);
 	<!-- BEGIN Custom CSS-->
 	<link rel="stylesheet" type="text/css" href="/assets/css/style.css">
 	<!-- END Custom CSS-->
-</head>
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/assets/images/logo/logo.png" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="128x128" />
+    <meta name="application-name" content="<?=$fullname?> Wallet"/>
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileImage" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square70x70logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square150x150logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-wide310x150logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square310x310logo" content="/assets/images/logo/logo.png" /></head>
 
 <body class="vertical-layout vertical-compact-menu 2-columns   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-compact-menu" data-col="2-columns">
     <?php include_once('nav.php'); ?>
@@ -54,6 +72,9 @@ $transactionList = $client->getTransactionList($user_session, $txpage);
 							</ol>
 						</div>
 					</div>
+				</div>
+				<div class=" col-md-4">
+					<li class="breadcrumb breadcrumb-item"><a href="https://blockstarter.net/exp/<?=$fullname?>/">Block Explorer</a> </li>
 				</div>
 			</div>
 			<div class="content-body">
@@ -81,15 +102,19 @@ $transactionList = $client->getTransactionList($user_session, $txpage);
 					</div>
 					<div class="transactions-table-tbody">
 						<?php
-							foreach(array_reverse($transactionList) as $transaction) { 
-								if($transaction['category']=="send") {
+							foreach(array_reverse($transactionList) as $tx) {
+								// floatval ok for non-write ops
+								$amount = floatval($tx['amount']);
+								if($amount < 0) {
 									$tx_type = ['Sent', 'danger'];
 								} else {
 									$tx_type = ['Received', 'success'];
 								}
-								if($transaction['confirmations'] > 5) {
+								if($tx['confirmations'] > 5) {
 									$tx_status = 'Confirmed';
-								} else {
+								} elseif($tx['category']=='move') {
+									$tx_status = 'Confirmed';
+							        } else {
 									$tx_status = 'Pending';
 								}
 						?>
@@ -100,7 +125,7 @@ $transactionList = $client->getTransactionList($user_session, $txpage);
 			<div class="row">
 				<div class="col-md-2 col-12 py-1">
 					<p class="mb-0"><span class="d-inline-block d-md-none text-bold-700">Date: </span>
-						<?php echo date('n/j/Y h:i a',$transaction['time']) ?>
+						<?php echo date('n/j/Y h:i a', $tx['time']) ?>
 					</p>
 				</div>
 				<div class="col-md-2 col-12 py-1"> <span class="d-inline-block d-md-none text-bold-700">Type: </span> <span class="d-inline-block d-md-none text-bold-700">Type: </span>
@@ -110,7 +135,7 @@ $transactionList = $client->getTransactionList($user_session, $txpage);
 				</div>
 				<div class="col-md-2 col-12 py-1">
 					<p class="mb-0"><span class="d-inline-block d-md-none text-bold-700">Amount: </span>
-						<?=abs($transaction['amount']); ?>
+						<?=abs($tx['amount']); ?>
 							<?=$short?>
 					</p>
 				</div>
@@ -121,11 +146,16 @@ $transactionList = $client->getTransactionList($user_session, $txpage);
 				</div>
 				<div class="col-md-2 col-12 py-1">
 					<p class="mb-0"><span class="d-inline-block d-md-none text-bold-700">Details: </span>
-						<?php if ($transaction['txid']) {?>
-							<a href="https://blockstarter.net/exp/<?=$fullname?>/tx/<?php echo $transaction['txid'];?>/">Details</a>
+						<?php if ($tx['txid']) {?>
+							<a href="https://blockstarter.net/exp/<?=$fullname?>/tx/<?php echo $tx['txid'];?>/">Details</a>
+                        <?php } elseif($amount < 0 and $tx['category'] == 'move') { 
+                            $len = strlen($tx['otheraccount']);
+                            $purchaser = substr($tx['otheraccount'], 7, $len-8);
+                        ?>
+							<strong>Purchased by user</strong>
 						<?php } else { ?>
 							<strong>Purchased off-chain</strong>
-						<?php } ?>
+					  	<?php } ?>
 					</p>
 				</div>
 			</div>

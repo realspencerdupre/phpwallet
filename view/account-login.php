@@ -20,8 +20,7 @@ $_SESSION['messages'] = '';
     <meta name="author" content="PIXINVENT">
     <title>Account Login - <?=$fullname?></title>
     <link rel="apple-touch-icon" href="/assets/images/ico/apple-icon-120.png">
-    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/ico/favicon.ico">
-    <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i|Comfortaa:300,400,500,700" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i|Comfortaa:300,400,500,700" rel="stylesheet">
     <!-- BEGIN VENDOR CSS-->
     <link rel="stylesheet" type="text/css" href="/assets/css/vendors.css">
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/forms/icheck/icheck.css">
@@ -38,8 +37,28 @@ $_SESSION['messages'] = '';
     <!-- BEGIN Custom CSS-->
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
     <!-- END Custom CSS-->
-  </head>
-  <body class="vertical-layout vertical-compact-menu 1-column  bg-full-screen-image menu-expanded blank-page blank-page" data-open="click" data-menu="vertical-compact-menu" data-col="1-column">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/assets/images/logo/logo.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/assets/images/logo/logo.png" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="/assets/images/logo/logo.png" sizes="128x128" />
+    <meta name="application-name" content="<?=$fullname?> Wallet"/>
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileImage" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square70x70logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square150x150logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-wide310x150logo" content="/assets/images/logo/logo.png" />
+    <meta name="msapplication-square310x310logo" content="/assets/images/logo/logo.png" />
+</head>
+<body class="vertical-layout vertical-compact-menu 1-column  bg-full-screen-image menu-expanded blank-page blank-page" data-open="click" data-menu="vertical-compact-menu" data-col="1-column">
     <?php printMessages($messages);?>
     <!-- ////////////////////////////////////////////////////////////////////////////-->
     <div class="app-content content">
@@ -51,7 +70,7 @@ $_SESSION['messages'] = '';
         <!-- image -->
         <div class="col-xl-3 col-lg-4 col-md-5 col-sm-5 col-12 p-0 text-center d-none d-md-block">
             <div class="border-grey border-lighten-3 m-0 box-shadow-0 card-account-left height-400">
-                <img src="/assets/images/pages/account-login.png" class="card-account-img width-200" alt="card-account-img">
+                <img src="/assets/images/logo/logo.png" class="card-account-img width-200" alt="card-account-img">
             </div>
         </div>
         <!-- login form -->
@@ -77,7 +96,7 @@ $_SESSION['messages'] = '';
                                 <input type="text" class="form-control" name="auth" id="auth" placeholder="<?php echo $lang['FORM_2FA']; ?>">
                             </fieldset>
                             <button type="submit" class="btn-gradient-primary btn-block my-1"><?php echo $lang['FORM_LOGIN']; ?></button>
-                            <p class="text-center"><a href="account-register.php" class="card-link">Register</a></p>
+                            <p class="text-center"><a href="account-register.php" class="card-link">Register</a><a href="forgot-password.php" class="card-link">Forgot Password</a></p>
                         </form>
                     </div>                    
                 </div>

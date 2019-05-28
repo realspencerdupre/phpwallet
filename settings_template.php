@@ -29,10 +29,9 @@ $pay_currencies = [
         'fullname' => 'Bitcoin',
         'shortname' => 'BTC',
     ],
-    [
-        'fullname' => 'Ethereum',
-        'shortname' => 'ETH',
-    ],
-]
+];
+
+$hot_account_main = 'piWallet';
+$hot_account_wait = 'piWallet_wait';
 
 ?>

@@ -4,3 +4,7 @@ venv
 node_modules
 vendor
 composer.lock
+assets/images/logo/logo.png
+bin
+*.log
+__pycache__

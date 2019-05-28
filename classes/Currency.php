@@ -6,7 +6,16 @@ require __DIR__ . '/../vendor/autoload.php';
 
 class Currency {
 
-	private $mysqli;
+    private $mysqli;
+    public static $api_options = [
+        'btc_blockcypher' => [
+            'name' => 'BTC Blockcypher.com',
+            'address_url' => 'https://api.blockcypher.com/v1/btc/main/addrs/<address>/full?limit=50&confirmations=<confirmations>',
+            'jsonpath' => '$.balance',
+            'submittx_url' => '/view/process-submittx.php?tx=<hex>',
+            'tx_url' => 'https://live.blockcypher.com/btc/tx/<txid>/',
+        ],
+    ];
 
 	function __construct($mysqli) {
         $this->mysqli = $mysqli;
@@ -18,8 +27,10 @@ class Currency {
 
 	public static function create($mysqli, $fullname, $short) {
         $currency = new Currency($mysqli);
+        reset(Currency::$api_options);
+        $default_api = key(Currency::$api_options);
         $query = $mysqli->query(
-            "INSERT INTO currencies (`fullname`, `short`) VALUES ('$fullname', '$short');"
+            "INSERT INTO currencies (`fullname`, `short`, `rate`, `required_conf`, `balance_api`) VALUES ('$fullname', '$short', 1, 1, '$default_api');"
         );
         if (!$query)
             return mysqli_error($mysqli);
@@ -43,6 +54,8 @@ class Currency {
         $currency->fullname = $obj['fullname'];
         $currency->short = $obj['short'];
         $currency->rate = $obj['rate'];
+        $currency->balance_api = Currency::$api_options[$obj['balance_api']];
+        $currency->required_conf = $obj['required_conf'];
         return $currency;
     }
     

@@ -202,6 +202,7 @@ else {
             $login_id = $mysqli->insert_id;
 
             if (!is_array($result)) {
+                addMessage("Login details were incorrect", 'warning');
                 $error['type'] = "login";
                 $error['message'] = $result;
             }
